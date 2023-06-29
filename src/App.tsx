@@ -1,10 +1,12 @@
+import { useEffect } from 'react';
 import { Route, Routes } from 'react-router-dom';
+import Home from '@/pages/Home';
 
 function App() {
   return (
     <div className="mx-auto max-w-[39rem]">
       <Routes>
-        <Route path="/" element={<>APP</>} />
+        <Route path="/" element={<Home />} />
       </Routes>
     </div>
   );
