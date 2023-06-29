@@ -1,4 +1,5 @@
 /** @type {import('tailwindcss').Config} */
+import { fontFamily as defaultTheme } from 'tailwindcss/defaultTheme';
 
 const spacing = Array(101)
   .fill()
@@ -21,7 +22,35 @@ module.exports = {
   theme: {
     spacing,
     borderRadius,
-    extend: {},
+    fontSize: {
+      13: '1.3rem',
+      14: '1.4rem',
+      15: '1.5rem',
+      16: '1.6rem',
+      17: '1.7rem',
+      18: '1.8rem',
+      20: '2.0rem',
+      22: '2.2rem',
+      24: '2.4rem',
+    },
+    extend: {
+      fontFamily: {
+        sans: ['Pretendard', ...defaultTheme.sans],
+      },
+      colors: {
+        dark: '#262626',
+        cyan: '#00f6bf',
+        header: '#404040',
+        primary: '#525252',
+        secondary: '#737373',
+        tertiary: '#d4d4d4',
+        placeholder: '#a3a3a3',
+        cancelborder: '#e0e0e0',
+        cancel: '#838383',
+        background: '#f5f5f5',
+        bar: '#f7f7f7',
+      },
+    },
   },
   plugins: [],
 };
