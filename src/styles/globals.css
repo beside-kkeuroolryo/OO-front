@@ -1,5 +1,29 @@
 @import './_reset.css';
 @import './_normalize.css';
+@import './_fonts.css';
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
+
+html,
+body,
+#root {
+  height: 100%;
+}
+
+@layer utilities {
+  .center {
+    position: absolute;
+    left: 50%;
+    transform: translateX(-50%);
+  }
+  .widen::after {
+    content: '';
+    position: absolute;
+    left: 50%;
+    top: 50%;
+    transform: translate(-50%, -50%);
+    width: 150%;
+    height: 150%;
+  }
+}
