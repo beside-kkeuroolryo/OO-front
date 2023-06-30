@@ -17,6 +17,11 @@ body,
     left: 50%;
     transform: translateX(-50%);
   }
+
+  .widen {
+    position: relative;
+  }
+
   .widen::after {
     content: '';
     position: absolute;

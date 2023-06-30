@@ -14,7 +14,7 @@ export default function NavIconButton({
   className = '',
 }: NavIconButtonProps) {
   return (
-    <Link to={to} onClick={onClick} className={`widen relative ${className}`}>
+    <Link to={to} onClick={onClick} className={`widen ${className}`}>
       {Icon}
     </Link>
   );
