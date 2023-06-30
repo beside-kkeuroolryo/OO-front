@@ -32,7 +32,7 @@ export default function Home() {
             랜덤
           </CategoryLink>
         </div>
-        <CategoryLink>골라바에 도착한 게임 모음</CategoryLink>
+        <CategoryLink to="/questions/custom">골라바에 도착한 질문 모음</CategoryLink>
         <Link
           to="/request"
           className="font-14 flex justify-center rounded-50 border border-solid border-placeholder py-14 text-primary"
