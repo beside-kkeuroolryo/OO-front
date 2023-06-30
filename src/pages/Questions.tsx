@@ -1,5 +1,4 @@
 import { useState } from 'react';
-import { useLocation, useParams } from 'react-router-dom';
 import ProgressBar from '@/components/Questions/ProgressBar';
 import Button from '@/components/common/Button';
 import Navbar from '@/components/common/Navbar';
@@ -34,7 +33,6 @@ const comments = [
 ];
 
 export default function Questions() {
-  const { pathname } = useLocation();
   const [index, setIndex] = useState(0);
   const [chosenItem, setChosenItem] = useState<'' | 'a' | 'b'>('');
   const comment = useInput('');

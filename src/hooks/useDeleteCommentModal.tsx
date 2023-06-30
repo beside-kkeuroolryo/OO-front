@@ -5,6 +5,7 @@ import useInput from '@/hooks/useInput';
 export default function useDeleteCommentModal(commentId?: number, nickname?: string) {
   const [isOpen, setIsOpen] = useState(false);
   const password = useInput('');
+  commentId;
 
   const handleDeleteComment = (event: React.FormEvent) => {
     event.preventDefault();
