@@ -16,26 +16,14 @@ const q = {
   ratioB: '30',
 };
 
-const comments = [
-  { id: 1, username: '익명이', content: '안녕하세요' },
-  {
-    id: 2,
-    username: '익1이',
-    content:
-      'Lorem ipsum dolor sit amet consectetur adipisicing elit. At deleniti voluptatibus,quo dolorem nesciunt error architecto delectus possimus odio accusantium suscipit, similique culpa quos dolor ex itaque? Sint, ad commodi. ',
-  },
-  {
-    id: 3,
-    username: '익1이',
-    content:
-      'Lorem ipsum dolor sit amet consectetur adipisicing elit. At deleniti voluptatibus,quo dolorem nesciunt error architecto delectus possimus odio accusantium suscipit, similique culpa quos dolor ex itaque? Sint, ad commodi. ',
-  },
-];
+const ids = [1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15];
 
 export default function Questions() {
   const [index, setIndex] = useState(0);
   const [chosenItem, setChosenItem] = useState<'' | 'a' | 'b'>('');
   const comment = useInput('');
+
+  const currentId = ids?.[index];
 
   const hasChosen = chosenItem !== '';
   const isChosenA = chosenItem === 'a';
@@ -104,7 +92,7 @@ export default function Questions() {
             </Button>
           </div>
         </section>
-        <Comments comments={comments} />
+        <Comments questionId={currentId} />
         <CommentForm comment={comment} hasChosen={hasChosen} />
       </main>
     </>

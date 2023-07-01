@@ -25,14 +25,14 @@ export default function Home() {
           </CategoryLink>
         </div>
         <div className="flex gap-16">
-          <CategoryLink to="/questions/friends" className="w-1/2">
+          <CategoryLink to="/questions/friend" className="w-1/2">
             친구
           </CategoryLink>
           <CategoryLink to="/questions/random" className="w-1/2">
             랜덤
           </CategoryLink>
         </div>
-        <CategoryLink to="/questions/custom">골라바에 도착한 질문 모음</CategoryLink>
+        <CategoryLink to="/questions/usermade">골라바에 도착한 질문 모음</CategoryLink>
         <Link
           to="/request"
           className="font-14 flex justify-center rounded-50 border border-solid border-placeholder py-14 text-primary"
