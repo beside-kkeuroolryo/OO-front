@@ -1,7 +1,7 @@
 import { useState } from 'react';
 import { ReactComponent as More } from '@/assets/icons/more.svg';
 import useDeleteCommentModal from '@/hooks/useDeleteCommentModal';
-import { useGetComments } from '@/api/questions';
+import { useGetComments } from '@/api/comments';
 import SpinnerIcon from '@/components/common/SpinnerIcon';
 
 type CommentsProps = {
