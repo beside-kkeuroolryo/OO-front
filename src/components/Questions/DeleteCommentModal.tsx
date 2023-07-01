@@ -1,6 +1,7 @@
 import Button from '@/components/common/Button';
 import Modal, { ModalProps } from '@/components/common/Modal';
 import { UseInputReturn } from '@/hooks/useInput';
+import { MAX_PASSWORD_LENGTH } from '@/constants/constants';
 
 type DeleteCommentModalProps = {
   nickname?: string;
@@ -15,6 +16,14 @@ export default function DeleteCommentModal({
   onDeleteComment,
   ...props
 }: DeleteCommentModalProps) {
+  const handleLimitPassword = (event: React.ChangeEvent<HTMLInputElement>) => {
+    const input = event.target.value;
+    if (input.length > MAX_PASSWORD_LENGTH) {
+      event.target.value = input.slice(0, MAX_PASSWORD_LENGTH);
+    }
+    password?.onChange(event);
+  };
+
   return (
     <Modal className="relative" onClose={onClose} {...props}>
       <form
@@ -38,7 +47,7 @@ export default function DeleteCommentModal({
             id="password"
             type="password"
             value={password?.value}
-            onInput={password?.onChange}
+            onInput={handleLimitPassword}
             placeholder="4자리 이상 입력해주세요"
             className="font-16 w-[29rem]  rounded-12 bg-background p-16 font-medium"
           />
