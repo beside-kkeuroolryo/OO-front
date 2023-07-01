@@ -129,7 +129,7 @@ export default function Questions() {
           </div>
         </section>
         <Comments questionId={currentId} />
-        <CommentForm comment={comment} hasChosen={hasChosen} />
+        <CommentForm comment={comment} hasChosen={hasChosen} questionId={question?.id} />
       </main>
     </>
   );

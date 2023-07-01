@@ -3,6 +3,12 @@ import { AxiosError } from 'axios';
 import { QuestionType } from '@/types/questions';
 import axiosInstance from '@/api/config/axios';
 
+export const usePostResult = () => {
+  return useMutation((body: { questionId?: number; choice?: '' | 'a' | 'b' }[]) => {
+    return axiosInstance.post('/api/golrabas/result', { results: body });
+  });
+};
+
 export const useGetQuestionIds = (category?: string, idsState?: number[]) => {
   return useQuery<number[], AxiosError>(
     [category, 'ids'],
@@ -25,8 +31,8 @@ export const useGetQuestion = (id?: number) => {
   );
 };
 
-export const usePostResult = () => {
-  return useMutation((body: { questionId?: number; choice?: '' | 'a' | 'b' }[]) => {
-    return axiosInstance.post('/api/golrabas/result', { results: body });
+export const usePostQuestion = () => {
+  return useMutation((body: { content: string; choiceA: string; choiceB: string }) => {
+    return axiosInstance.post(`/api/golrabas/question`, body);
   });
 };
