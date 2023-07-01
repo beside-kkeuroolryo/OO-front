@@ -6,10 +6,11 @@ import { ReactComponent as Submit } from '@/assets/icons/submit.svg';
 type CommentForm = {
   comment?: UseInputReturn;
   hasChosen?: boolean;
+  questionId?: number;
 };
 
-export default function CommentForm({ comment, hasChosen }: CommentForm) {
-  const [renderPostCommentModal, handleOpenModal] = usePostCommentModal(comment);
+export default function CommentForm({ comment, hasChosen, questionId }: CommentForm) {
+  const [renderPostCommentModal, handleOpenModal] = usePostCommentModal(comment, questionId);
   const isButtonDisabled = !hasChosen || comment?.value.length === 0;
 
   const handleOpenPostModal = useCallback(
@@ -34,7 +35,7 @@ export default function CommentForm({ comment, hasChosen }: CommentForm) {
           disabled={!hasChosen}
         />
         <button className="text-dark disabled:text-tertiary" disabled={isButtonDisabled}>
-          <Submit role="img" />
+          <Submit role="img" aria-label="댓글달기 모달 열기" />
         </button>
       </form>
       {renderPostCommentModal()}
