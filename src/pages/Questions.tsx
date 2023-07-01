@@ -1,4 +1,5 @@
 import { useState } from 'react';
+import { useLocation } from 'react-router-dom';
 import ProgressBar from '@/components/Questions/ProgressBar';
 import Button from '@/components/common/Button';
 import Navbar from '@/components/common/Navbar';
@@ -7,40 +8,40 @@ import Comments from '@/components/Questions/Comments';
 import useInput from '@/hooks/useInput';
 import { QUESTIONS_COUNT } from '@/constants/constants';
 import CommentForm from '@/components/Questions/CommentForm';
-
-const q = {
-  content: '친구의 깻잎 10장이 붙었다면 내 애인이 떼줘도 된다?',
-  choiceA: '그정도는 괜찮아!',
-  choiceB: '절대 불가능',
-  ratioA: '70',
-  ratioB: '30',
-};
-
-const ids = [1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15];
+import { useGetQuestion, useGetQuestionIds } from '@/api/questions';
 
 type Choice = '' | 'a' | 'b';
 
 export default function Questions() {
+  const { pathname } = useLocation();
+  const category = pathname.split('/')[2];
+
   const [index, setIndex] = useState(0);
-  const [chosenItem, setChosenItem] = useState<Choice>('');
+  const { data: ids, isLoading: isLoadingIds } = useGetQuestionIds(category);
+  const currentId = ids?.[index];
+  const { data: question, isLoading: isLoadingQuestion } = useGetQuestion(currentId);
+
+  const [choice, setChoice] = useState<Choice>('');
+  const [result, setResult] = useState<{ questionId?: number; choice?: Choice }[]>([]);
   const comment = useInput('');
 
-  const currentId = ids?.[index];
+  const hasChosen = choice !== '';
+  const isChosenA = choice === 'a';
+  const isChosenB = choice === 'b';
 
-  const hasChosen = chosenItem !== '';
-  const isChosenA = chosenItem === 'a';
-  const isChosenB = chosenItem === 'b';
+  const isLoading = isLoadingIds && isLoadingQuestion;
 
   const init = () => {
-    setChosenItem('');
+    setChoice('');
     comment.onClear();
   };
 
   const handleChoose = (event: React.MouseEvent<HTMLButtonElement>) => {
-    setChosenItem(event.currentTarget.id as Choice);
+    setChoice(event.currentTarget.id as Choice);
   };
 
   const handleClickNext = () => {
+    setResult((prev) => [...prev, { questionId: currentId, choice }]);
     setIndex((prev) => prev + 1);
     init();
   };
@@ -63,24 +64,26 @@ export default function Questions() {
                 id="question"
                 className="font-22 flex flex-nowrap break-keep px-30 text-center font-bold"
               >
-                {q.content}
+                {question?.content}
               </h1>
             </div>
             <div className="flex flex-col gap-12">
               <Option
                 id="a"
-                content={q.choiceA}
+                content={question?.choiceA}
                 hasChosen={hasChosen}
                 isChosen={isChosenA}
-                ratio={q.ratioA}
+                ratio={question?.choiceAResult}
+                isLoading={isLoading}
                 onClick={handleChoose}
               />
               <Option
                 id="b"
-                content={q.choiceB}
+                content={question?.choiceB}
                 hasChosen={hasChosen}
                 isChosen={isChosenB}
-                ratio={q.ratioB}
+                ratio={question?.choiceBResult}
+                isLoading={isLoading}
                 onClick={handleChoose}
               />
             </div>
