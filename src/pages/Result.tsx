@@ -12,9 +12,15 @@ export default function Result() {
   const [shareUrl, setShareUrl] = useState('');
 
   const [idsState, resultData, resultQueryState] = [state?.ids, state?.result, state?.queryResult];
+  const resultQueryString = searchParams.get('r');
+  const idsQueryString = searchParams.get('i');
   const category = searchParams.get('category');
 
-  const result: string[][] = resultQueryState;
+  const result: string[][] = resultQueryState
+    ? resultQueryState
+    : JSON.parse(resultQueryString ? resultQueryString : '[]');
+
+  const ids = idsState ? idsState : JSON.parse(idsQueryString ? idsQueryString : '[]');
 
   const handleGoHome = () => {
     navigate('/');
@@ -27,12 +33,12 @@ export default function Result() {
   useEffect(() => {
     const generateUrl = () => {
       const query = new URLSearchParams();
-      query.append('i', JSON.stringify(idsState));
+      query.append('i', JSON.stringify(ids));
       query.append('r', JSON.stringify(resultQueryState));
       setShareUrl(`${window.location.href}&${query.toString()}`);
     };
     generateUrl();
-  }, [idsState, resultQueryState]);
+  }, [ids, resultQueryState]);
 
   return (
     <main className="h-full text-primary">
