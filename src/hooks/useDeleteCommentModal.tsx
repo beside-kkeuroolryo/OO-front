@@ -1,16 +1,35 @@
 import { useCallback, useState } from 'react';
+import { useQueryClient } from '@tanstack/react-query';
+import { toast } from 'react-toastify';
 import DeleteCommentModal from '@/components/Questions/DeleteCommentModal';
 import useInput from '@/hooks/useInput';
+import { useDeleteComment } from '@/api/comments';
 
-export default function useDeleteCommentModal(commentId?: number, nickname?: string) {
+export default function useDeleteCommentModal(
+  questionId?: number,
+  commentId?: number,
+  nickname?: string,
+) {
+  const queryClient = useQueryClient();
   const [isOpen, setIsOpen] = useState(false);
   const password = useInput('');
-  commentId;
+  const { mutate } = useDeleteComment(questionId, commentId);
 
   const handleDeleteComment = (event: React.FormEvent) => {
     event.preventDefault();
     if (password.value.length < 4) return;
-    handleClose();
+    mutate(
+      { password: password.value },
+      {
+        onSuccess: () => {
+          queryClient.invalidateQueries(['question', questionId, 'comments']);
+          handleClose();
+        },
+        onError: () => {
+          toast.error('댓글 삭제에 실패했습니다.', { position: 'top-right' });
+        },
+      },
+    );
   };
 
   const handleClose = useCallback(() => {

@@ -12,6 +12,7 @@ export default function Comments({ questionId }: CommentsProps) {
   const { data: comments, isLoading } = useGetComments(questionId);
   const [selectedCommentId, setSelectedCommentID] = useState(-1);
   const [renderDeleteCommentModal, handleOpenModal] = useDeleteCommentModal(
+    questionId,
     selectedCommentId,
     comments?.filter(({ id }) => id === selectedCommentId)[0]?.username,
   );
