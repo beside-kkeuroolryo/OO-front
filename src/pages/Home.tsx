@@ -1,6 +1,7 @@
 import { Link } from 'react-router-dom';
 import CategoryLink from '@/components/Home/CategoryLink';
 import Navbar from '@/components/common/Navbar';
+import { ReactComponent as Next } from '@/assets/icons/next.svg';
 
 const bgConfig = 'bg-[url(@/assets/images/home.png)]';
 
@@ -35,9 +36,9 @@ export default function Home() {
         <CategoryLink to="/questions/usermade">골라바에 도착한 질문 모음</CategoryLink>
         <Link
           to="/request"
-          className="font-14 flex justify-center rounded-50 border border-solid border-placeholder py-14 text-primary"
+          className="font-14 flex justify-center gap-8 rounded-50 border border-solid border-placeholder py-14 text-primary"
         >
-          만들고 싶은 밸런스 질문이 있어요!
+          만들고 싶은 밸런스 질문이 있어요! <Next />
         </Link>
       </main>
     </div>
