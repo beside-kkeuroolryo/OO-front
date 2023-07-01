@@ -1,4 +1,6 @@
+import { useEffect, useState } from 'react';
 import { useLocation, useNavigate, useSearchParams } from 'react-router-dom';
+import { CopyToClipboard } from 'react-copy-to-clipboard';
 import Button from '@/components/common/Button';
 import Navbar from '@/components/common/Navbar';
 import { ReactComponent as Bullet } from '@/assets/icons/bullet.svg';
@@ -7,6 +9,7 @@ export default function Result() {
   const navigate = useNavigate();
   const { state } = useLocation();
   const [searchParams] = useSearchParams();
+  const [shareUrl, setShareUrl] = useState('');
 
   const [idsState, resultData, resultQueryState] = [state?.ids, state?.result, state?.queryResult];
   const category = searchParams.get('category');
@@ -20,6 +23,16 @@ export default function Result() {
   const handleRetry = () => {
     navigate(`/questions/${category}`, { state: idsState });
   };
+
+  useEffect(() => {
+    const generateUrl = () => {
+      const query = new URLSearchParams();
+      query.append('i', JSON.stringify(idsState));
+      query.append('r', JSON.stringify(resultQueryState));
+      setShareUrl(`${window.location.href}&${query.toString()}`);
+    };
+    generateUrl();
+  }, [idsState, resultQueryState]);
 
   return (
     <main className="h-full text-primary">
@@ -37,8 +50,9 @@ export default function Result() {
               <Button onClick={handleGoHome} className="w-full py-18">
                 홈으로 돌아가기
               </Button>
-
-              <Button className="w-full py-18">링크 복사하기</Button>
+              <CopyToClipboard text={shareUrl}>
+                <Button className="w-full py-18">링크 복사하기</Button>
+              </CopyToClipboard>
             </div>
             <Button variant="ghost" onClick={handleRetry} className="w-full py-18">
               같은 질문 다시하기
