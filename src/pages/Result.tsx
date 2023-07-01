@@ -1,10 +1,12 @@
-import { useEffect, useState } from 'react';
+import { useEffect, useRef, useState } from 'react';
 import { useLocation, useNavigate, useSearchParams } from 'react-router-dom';
 import { CopyToClipboard } from 'react-copy-to-clipboard';
 import { toast } from 'react-toastify';
 import Button from '@/components/common/Button';
 import Navbar from '@/components/common/Navbar';
 import { ReactComponent as Bullet } from '@/assets/icons/bullet.svg';
+import useCustomToast from '@/hooks/useCustomToast';
+import { USERMADE } from '@/constants/constants';
 import { usePostResult } from '@/api/questions';
 
 export default function Result() {
@@ -12,6 +14,9 @@ export default function Result() {
   const { state } = useLocation();
   const [searchParams] = useSearchParams();
   const [shareUrl, setShareUrl] = useState('');
+
+  const customToast = useCustomToast();
+  const isToasted = useRef(false);
   const { mutate } = usePostResult();
 
   const [idsState, resultData, resultQueryState] = [state?.ids, state?.result, state?.queryResult];
@@ -48,6 +53,13 @@ export default function Result() {
       mutate(resultData, { onError: () => toast.error('결과 전송에 실패했습니다.') });
     }
   }, [resultData, mutate]);
+
+  useEffect(() => {
+    if (category === USERMADE && !isToasted.current) {
+      customToast.alertUpdate();
+      isToasted.current = true;
+    }
+  }, [category, customToast]);
 
   return (
     <main className="h-full text-primary">
