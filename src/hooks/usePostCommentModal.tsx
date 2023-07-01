@@ -27,7 +27,7 @@ export default function usePostCommentModal(comment?: UseInputReturn, questionId
           comment?.onClear();
         },
         onError: () => {
-          toast.error('댓글 달기에 실패했습니다.');
+          toast.error('댓글 작성에 실패했습니다.', { position: 'top-right' });
         },
       },
     );
