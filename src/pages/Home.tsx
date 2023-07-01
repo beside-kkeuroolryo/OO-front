@@ -1,6 +1,7 @@
 import { Link } from 'react-router-dom';
 import CategoryLink from '@/components/Home/CategoryLink';
 import Navbar from '@/components/common/Navbar';
+import { ReactComponent as Next } from '@/assets/icons/next.svg';
 
 const bgConfig = 'bg-[url(@/assets/images/home.png)]';
 
@@ -13,7 +14,7 @@ export default function Home() {
           <span className="text-cyan">골라바</span>에서 <span className="text-cyan">골라바!</span>
           <br /> 어떤 선택을 하실건가요?
         </h1>
-        <div className="font-16 font-semibold">골라바 게임을 시작해 보세요. 😎</div>
+        <div className="font-16 font-semibold text-tertiary">골라바 게임을 시작해 보세요. 😎</div>
       </header>
       <main className="flex flex-col gap-16 px-24 py-24">
         <div className="flex gap-16">
@@ -35,9 +36,9 @@ export default function Home() {
         <CategoryLink to="/questions/usermade">골라바에 도착한 질문 모음</CategoryLink>
         <Link
           to="/request"
-          className="font-14 flex justify-center rounded-50 border border-solid border-placeholder py-14 text-primary"
+          className="font-14 flex justify-center gap-8 rounded-50 border border-solid border-placeholder py-14 text-primary"
         >
-          만들고 싶은 밸런스 질문이 있어요!
+          만들고 싶은 밸런스 질문이 있어요! <Next />
         </Link>
       </main>
     </div>

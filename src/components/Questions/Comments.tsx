@@ -45,7 +45,7 @@ export default function Comments({ questionId }: CommentsProps) {
           </div>
         ) : null}
         {comments?.map(({ id, username, content }) => (
-          <article key={id} className="flex flex-col gap-10 rounded-12 bg-white p-16">
+          <article key={id} className="flex flex-col gap-6 rounded-12 bg-white p-16">
             <div className="flex justify-between">
               <div className="font-13 font-semibold">{username}</div>
               <button type="button" data-id={id} className="widen" onClick={handleClickMore}>
