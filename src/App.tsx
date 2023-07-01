@@ -3,6 +3,7 @@ import { ToastContainer } from 'react-toastify';
 import Home from '@/pages/Home';
 import Questions from '@/pages/Questions';
 import Result from '@/pages/Result';
+import Request from '@/pages/Request';
 import 'react-toastify/dist/ReactToastify.css';
 
 function App() {
@@ -10,6 +11,7 @@ function App() {
     <div className="mx-auto h-full max-w-[39rem]">
       <Routes>
         <Route path="/" element={<Home />} />
+        <Route path="request" element={<Request />} />
         <Route path="questions">
           <Route path="self" element={<Questions />} />
           <Route path="couple" element={<Questions />} />
