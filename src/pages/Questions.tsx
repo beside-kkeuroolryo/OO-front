@@ -68,8 +68,10 @@ export default function Questions() {
       queryResult.length === QUESTIONS_COUNT &&
       result.length === QUESTIONS_COUNT
     )
-      navigate(`/questions/result?category=${category}`, { state: { ids, result, queryResult } });
-  }, [ids, result, queryResult, isLastQuestion, category, navigate]);
+      navigate(`/questions/result?category=${category}`, {
+        state: { ids: idsState ? idsState : ids, result, queryResult },
+      });
+  }, [idsState, ids, result, queryResult, isLastQuestion, category, navigate]);
 
   useEffect(() => {
     if (isIdsError || isQuestionError) toast.error('문제를 불러오지 못했습니다.');
