@@ -1,5 +1,6 @@
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import { useLocation } from 'react-router-dom';
+import { toast } from 'react-toastify';
 import ProgressBar from '@/components/Questions/ProgressBar';
 import Button from '@/components/common/Button';
 import Navbar from '@/components/common/Navbar';
@@ -16,15 +17,18 @@ type Choice = '' | 'a' | 'b';
 export default function Questions() {
   const { pathname } = useLocation();
   const category = pathname.split('/')[2];
-
+  const comment = useInput('');
   const [index, setIndex] = useState(0);
-  const { data: ids, isLoading: isLoadingIds } = useGetQuestionIds(category);
-  const currentId = ids?.[index];
-  const { data: question, isLoading: isLoadingQuestion } = useGetQuestion(currentId);
-
   const [choice, setChoice] = useState<Choice>('');
   const [result, setResult] = useState<{ questionId?: number; choice?: Choice }[]>([]);
-  const comment = useInput('');
+
+  const { data: ids, isLoading: isLoadingIds, isError: isIdsError } = useGetQuestionIds(category);
+  const currentId = ids?.[index];
+  const {
+    data: question,
+    isLoading: isLoadingQuestion,
+    isError: isQuestionError,
+  } = useGetQuestion(currentId);
 
   const hasChosen = choice !== '';
   const isChosenA = choice === 'a';
@@ -46,6 +50,10 @@ export default function Questions() {
     setIndex((prev) => prev + 1);
     init();
   };
+
+  useEffect(() => {
+    if (isIdsError || isQuestionError) toast.error('문제를 불러오지 못했습니다.');
+  }, [isIdsError, isQuestionError]);
 
   return (
     <>
