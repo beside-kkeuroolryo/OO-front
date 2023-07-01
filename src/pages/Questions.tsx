@@ -41,7 +41,8 @@ export default function Questions() {
   const isChosenB = choice === 'b';
   const isLastQuestion = index === QUESTIONS_COUNT - 1;
 
-  const isLoading = isLoadingIds && isLoadingQuestion;
+  const isLoading = isLoadingIds || isLoadingQuestion;
+  const isError = isIdsError || isQuestionError;
 
   const init = () => {
     setChoice('');
@@ -49,6 +50,7 @@ export default function Questions() {
   };
 
   const handleChoose = (event: React.MouseEvent<HTMLButtonElement>) => {
+    if (isLoading || isError) return;
     setChoice(event.currentTarget.id as Choice);
   };
 
@@ -74,8 +76,8 @@ export default function Questions() {
   }, [idsState, ids, result, queryResult, isLastQuestion, category, navigate]);
 
   useEffect(() => {
-    if (isIdsError || isQuestionError) toast.error('문제를 불러오지 못했습니다.');
-  }, [isIdsError, isQuestionError]);
+    if (isError) toast.error('문제를 불러오지 못했습니다.');
+  }, [isError]);
 
   return (
     <>
