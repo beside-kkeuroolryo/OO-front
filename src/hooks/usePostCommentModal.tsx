@@ -26,6 +26,9 @@ export default function usePostCommentModal(comment?: UseInputReturn, questionId
           handleClose();
           comment?.onClear();
         },
+        onError: () => {
+          toast.error('댓글 달기에 실패했습니다.');
+        },
       },
     );
   };
