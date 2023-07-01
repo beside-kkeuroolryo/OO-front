@@ -5,10 +5,11 @@ import Button from '@/components/common/Button';
 import Navbar from '@/components/common/Navbar';
 import Option from '@/components/Questions/Option';
 import Comments from '@/components/Questions/Comments';
-import useInput from '@/hooks/useInput';
-import { QUESTIONS_COUNT } from '@/constants/constants';
 import CommentForm from '@/components/Questions/CommentForm';
+import SpinnerIcon from '@/components/common/SpinnerIcon';
+import useInput from '@/hooks/useInput';
 import { useGetQuestion, useGetQuestionIds } from '@/api/questions';
+import { QUESTIONS_COUNT } from '@/constants/constants';
 
 type Choice = '' | 'a' | 'b';
 
@@ -64,7 +65,7 @@ export default function Questions() {
                 id="question"
                 className="font-22 flex flex-nowrap break-keep px-30 text-center font-bold"
               >
-                {question?.content}
+                {isLoading ? <SpinnerIcon width={30} height={30} /> : question?.content}
               </h1>
             </div>
             <div className="flex flex-col gap-12">
