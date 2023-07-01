@@ -1,47 +1,81 @@
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
+import { useLocation, useNavigate } from 'react-router-dom';
+import { toast } from 'react-toastify';
 import ProgressBar from '@/components/Questions/ProgressBar';
 import Button from '@/components/common/Button';
 import Navbar from '@/components/common/Navbar';
 import Option from '@/components/Questions/Option';
 import Comments from '@/components/Questions/Comments';
-import useInput from '@/hooks/useInput';
-import { QUESTIONS_COUNT } from '@/constants/constants';
 import CommentForm from '@/components/Questions/CommentForm';
+import SpinnerIcon from '@/components/common/SpinnerIcon';
+import useInput from '@/hooks/useInput';
+import { useGetQuestion, useGetQuestionIds } from '@/api/questions';
+import { QUESTIONS_COUNT } from '@/constants/constants';
 
-const q = {
-  content: '친구의 깻잎 10장이 붙었다면 내 애인이 떼줘도 된다?',
-  choiceA: '그정도는 괜찮아!',
-  choiceB: '절대 불가능',
-  ratioA: '70',
-  ratioB: '30',
-};
-
-const ids = [1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15];
+type Choice = '' | 'a' | 'b';
 
 export default function Questions() {
-  const [index, setIndex] = useState(0);
-  const [chosenItem, setChosenItem] = useState<'' | 'a' | 'b'>('');
+  const navigate = useNavigate();
+  const { pathname, state: idsState } = useLocation();
+  const category = pathname.split('/')[2];
   const comment = useInput('');
+  const [index, setIndex] = useState(0);
+  const [choice, setChoice] = useState<Choice>('');
+  const [result, setResult] = useState<{ questionId?: number; choice?: Choice }[]>([]);
+  const [queryResult, setQueryResult] = useState<(string | (string | undefined)[])[]>([]);
+  const {
+    data: ids,
+    isLoading: isLoadingIds,
+    isError: isIdsError,
+  } = useGetQuestionIds(category, idsState);
 
-  const currentId = ids?.[index];
+  const currentId = idsState ? idsState?.[index] : ids?.[index];
+  const {
+    data: question,
+    isLoading: isLoadingQuestion,
+    isError: isQuestionError,
+  } = useGetQuestion(currentId);
 
-  const hasChosen = chosenItem !== '';
-  const isChosenA = chosenItem === 'a';
-  const isChosenB = chosenItem === 'b';
+  const hasChosen = choice !== '';
+  const isChosenA = choice === 'a';
+  const isChosenB = choice === 'b';
+  const isLastQuestion = index === QUESTIONS_COUNT - 1;
+
+  const isLoading = isLoadingIds && isLoadingQuestion;
 
   const init = () => {
-    setChosenItem('');
+    setChoice('');
     comment.onClear();
   };
 
   const handleChoose = (event: React.MouseEvent<HTMLButtonElement>) => {
-    setChosenItem(event.currentTarget.id as '' | 'a' | 'b');
+    setChoice(event.currentTarget.id as Choice);
   };
 
   const handleClickNext = () => {
-    setIndex((prev) => prev + 1);
+    setQueryResult((prev) => {
+      const choice = isChosenA ? question?.choiceA : question?.choiceB;
+      return [...prev, [question?.content, choice]];
+    });
+    setResult((prev) => [...prev, { questionId: currentId, choice }]);
+    setIndex((prev) => (isLastQuestion ? prev : prev + 1));
     init();
   };
+
+  useEffect(() => {
+    if (
+      isLastQuestion &&
+      queryResult.length === QUESTIONS_COUNT &&
+      result.length === QUESTIONS_COUNT
+    )
+      navigate(`/questions/result?category=${category}`, {
+        state: { ids: idsState ? idsState : ids, result, queryResult },
+      });
+  }, [idsState, ids, result, queryResult, isLastQuestion, category, navigate]);
+
+  useEffect(() => {
+    if (isIdsError || isQuestionError) toast.error('문제를 불러오지 못했습니다.');
+  }, [isIdsError, isQuestionError]);
 
   return (
     <>
@@ -61,24 +95,26 @@ export default function Questions() {
                 id="question"
                 className="font-22 flex flex-nowrap break-keep px-30 text-center font-bold"
               >
-                {q.content}
+                {isLoading ? <SpinnerIcon width={30} height={30} /> : question?.content}
               </h1>
             </div>
             <div className="flex flex-col gap-12">
               <Option
                 id="a"
-                content={q.choiceA}
+                content={question?.choiceA}
                 hasChosen={hasChosen}
                 isChosen={isChosenA}
-                ratio={q.ratioA}
+                ratio={question?.choiceAResult}
+                isLoading={isLoading}
                 onClick={handleChoose}
               />
               <Option
                 id="b"
-                content={q.choiceB}
+                content={question?.choiceB}
                 hasChosen={hasChosen}
                 isChosen={isChosenB}
-                ratio={q.ratioB}
+                ratio={question?.choiceBResult}
+                isLoading={isLoading}
                 onClick={handleChoose}
               />
             </div>
