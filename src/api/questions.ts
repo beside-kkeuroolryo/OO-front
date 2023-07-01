@@ -1,4 +1,4 @@
-import { useQuery } from '@tanstack/react-query';
+import { useMutation, useQuery } from '@tanstack/react-query';
 import { AxiosError } from 'axios';
 import { QuestionType } from '@/types/questions';
 import axiosInstance from '@/api/config/axios';
@@ -23,4 +23,10 @@ export const useGetQuestion = (id?: number) => {
     },
     { enabled: id !== undefined },
   );
+};
+
+export const usePostResult = () => {
+  return useMutation((body: { questionId?: number; choice?: '' | 'a' | 'b' }[]) => {
+    return axiosInstance.post('/api/golrabas/result', { results: body });
+  });
 };
