@@ -1,5 +1,5 @@
 import { useEffect, useState } from 'react';
-import { useLocation } from 'react-router-dom';
+import { useLocation, useNavigate } from 'react-router-dom';
 import { toast } from 'react-toastify';
 import ProgressBar from '@/components/Questions/ProgressBar';
 import Button from '@/components/common/Button';
@@ -15,15 +15,21 @@ import { QUESTIONS_COUNT } from '@/constants/constants';
 type Choice = '' | 'a' | 'b';
 
 export default function Questions() {
-  const { pathname } = useLocation();
+  const navigate = useNavigate();
+  const { pathname, state: idsState } = useLocation();
   const category = pathname.split('/')[2];
   const comment = useInput('');
   const [index, setIndex] = useState(0);
   const [choice, setChoice] = useState<Choice>('');
   const [result, setResult] = useState<{ questionId?: number; choice?: Choice }[]>([]);
+  const [queryResult, setQueryResult] = useState<(string | (string | undefined)[])[]>([]);
+  const {
+    data: ids,
+    isLoading: isLoadingIds,
+    isError: isIdsError,
+  } = useGetQuestionIds(category, idsState);
 
-  const { data: ids, isLoading: isLoadingIds, isError: isIdsError } = useGetQuestionIds(category);
-  const currentId = ids?.[index];
+  const currentId = idsState ? idsState?.[index] : ids?.[index];
   const {
     data: question,
     isLoading: isLoadingQuestion,
@@ -33,6 +39,7 @@ export default function Questions() {
   const hasChosen = choice !== '';
   const isChosenA = choice === 'a';
   const isChosenB = choice === 'b';
+  const isLastQuestion = index === QUESTIONS_COUNT - 1;
 
   const isLoading = isLoadingIds && isLoadingQuestion;
 
@@ -46,10 +53,23 @@ export default function Questions() {
   };
 
   const handleClickNext = () => {
+    setQueryResult((prev) => {
+      const choice = isChosenA ? question?.choiceA : question?.choiceB;
+      return [...prev, [question?.content, choice]];
+    });
     setResult((prev) => [...prev, { questionId: currentId, choice }]);
-    setIndex((prev) => prev + 1);
+    setIndex((prev) => (isLastQuestion ? prev : prev + 1));
     init();
   };
+
+  useEffect(() => {
+    if (
+      isLastQuestion &&
+      queryResult.length === QUESTIONS_COUNT &&
+      result.length === QUESTIONS_COUNT
+    )
+      navigate(`/questions/result?category=${category}`, { state: { ids, result, queryResult } });
+  }, [ids, result, queryResult, isLastQuestion, category, navigate]);
 
   useEffect(() => {
     if (isIdsError || isQuestionError) toast.error('문제를 불러오지 못했습니다.');
