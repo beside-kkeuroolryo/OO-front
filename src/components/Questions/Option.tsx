@@ -1,3 +1,5 @@
+import SpinnerIcon from '@/components/common/SpinnerIcon';
+
 const OptionConfig = {
   active: 'border-dark',
   inactive: 'bg-bar border-tertiary',
@@ -9,6 +11,7 @@ type OptionProps = {
   isChosen?: boolean;
   hasChosen?: boolean;
   ratio?: number;
+  isLoading?: boolean;
   onClick?: React.MouseEventHandler;
 };
 
@@ -17,7 +20,8 @@ export default function Option({
   content,
   isChosen = false,
   hasChosen = false,
-  ratio,
+  ratio = 0,
+  isLoading = false,
   onClick,
 }: OptionProps) {
   const isActive = isChosen && hasChosen;
@@ -35,22 +39,28 @@ export default function Option({
         }`}
       onClick={onClick}
     >
-      <div
-        style={{ width: `${hasChosen ? ratioPercentage : '0%'}` }}
-        className={`absolute left-0 top-0 h-full rounded-12 bg-cyan transition-[width] duration-500 ease-out ${
-          isActive ? 'border-r border-solid border-black' : ''
-        } ${isActive ? 'opacity-100' : 'opacity-0'}`}
-      ></div>
+      {isLoading ? (
+        <SpinnerIcon width={17} height={17} />
+      ) : (
+        <>
+          <div
+            style={{ width: `${hasChosen ? ratioPercentage : '0%'}` }}
+            className={`absolute left-0 top-0 h-full rounded-12 bg-cyan transition-[width] duration-500 ease-out ${
+              isActive ? 'border-r border-solid border-black' : ''
+            } ${isActive ? 'opacity-100' : 'opacity-0'}`}
+          ></div>
 
-      <div
-        style={{ width: `${hasChosen ? ratioPercentage : '0%'}` }}
-        className={`absolute left-0 top-0 h-full rounded-12 bg-tertiary transition-[width] duration-500 ease-out ${
-          isInactive ? 'opacity-100' : 'opacity-0'
-        }`}
-      ></div>
+          <div
+            style={{ width: `${hasChosen ? ratioPercentage : '0%'}` }}
+            className={`absolute left-0 top-0 h-full rounded-12 bg-tertiary transition-[width] duration-500 ease-out ${
+              isInactive ? 'opacity-100' : 'opacity-0'
+            }`}
+          ></div>
 
-      <div className="z-0">{content}</div>
-      <div className="z-0">{hasChosen ? ratioPercentage : null}</div>
+          <div className="z-0">{content}</div>
+          <div className="z-0">{hasChosen ? ratioPercentage : null}</div>
+        </>
+      )}
     </button>
   );
 }
