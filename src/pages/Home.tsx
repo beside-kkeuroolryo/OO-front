@@ -13,7 +13,7 @@ export default function Home() {
           <span className="text-cyan">골라바</span>에서 <span className="text-cyan">골라바!</span>
           <br /> 어떤 선택을 하실건가요?
         </h1>
-        <div className="font-16 font-semibold">골라바 게임을 시작해 보세요. 😎</div>
+        <div className="font-16 font-semibold text-tertiary">골라바 게임을 시작해 보세요. 😎</div>
       </header>
       <main className="flex flex-col gap-16 px-24 py-24">
         <div className="flex gap-16">
