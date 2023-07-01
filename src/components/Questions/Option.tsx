@@ -8,7 +8,7 @@ type OptionProps = {
   content?: string;
   isChosen?: boolean;
   hasChosen?: boolean;
-  ratio?: string;
+  ratio?: number;
   onClick?: React.MouseEventHandler;
 };
 
