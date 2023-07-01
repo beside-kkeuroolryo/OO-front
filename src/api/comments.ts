@@ -1,4 +1,4 @@
-import { useMutation, useQuery, useInfiniteQuery } from '@tanstack/react-query';
+import { useMutation, useInfiniteQuery } from '@tanstack/react-query';
 import { AxiosError } from 'axios';
 import { CommentType } from '@/types/questions';
 import axiosInstance from '@/api/config/axios';
