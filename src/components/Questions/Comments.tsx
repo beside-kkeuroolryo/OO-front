@@ -1,16 +1,21 @@
 import { useState } from 'react';
-import { ReactComponent as More } from '@/assets/icons/more.svg';
 import useDeleteCommentModal from '@/hooks/useDeleteCommentModal';
 import { useGetComments } from '@/api/comments';
 import SpinnerIcon from '@/components/common/SpinnerIcon';
+import { ReactComponent as More } from '@/assets/icons/more.svg';
+import { ReactComponent as Down } from '@/assets/icons/arrow-down.svg';
 
 type CommentsProps = {
   questionId?: number;
 };
 
 export default function Comments({ questionId }: CommentsProps) {
-  const { data: comments, isLoading } = useGetComments(questionId);
+  const { data, isLoading, fetchNextPage } = useGetComments(questionId);
   const [selectedCommentId, setSelectedCommentID] = useState(-1);
+  const isLast = data?.pages[data?.pages.length - 1].isLast;
+  const comments = data?.pages.reduce<any[]>((acc, data) => {
+    return [...acc, ...data.comments];
+  }, []);
   const [renderDeleteCommentModal, handleOpenModal] = useDeleteCommentModal(
     questionId,
     selectedCommentId,
@@ -21,6 +26,10 @@ export default function Comments({ questionId }: CommentsProps) {
     const target = event.target as HTMLElement;
     setSelectedCommentID(Number(target.dataset.id));
     handleOpenModal();
+  };
+
+  const handleClickMoreComments = () => {
+    fetchNextPage();
   };
 
   return (
@@ -46,6 +55,16 @@ export default function Comments({ questionId }: CommentsProps) {
             <p className="font-15 font-medium">{content}</p>
           </article>
         ))}
+        {isLast || isLoading ? null : (
+          <button
+            type="button"
+            onClick={handleClickMoreComments}
+            className="font-15 flex items-center justify-center gap-4 rounded-12 bg-background py-12 font-medium"
+          >
+            댓글 더보기
+            <Down role="presentation" />
+          </button>
+        )}
       </section>
       {renderDeleteCommentModal()}
     </>

@@ -1,4 +1,4 @@
-import { useMutation, useQuery } from '@tanstack/react-query';
+import { useMutation, useQuery, useInfiniteQuery } from '@tanstack/react-query';
 import { AxiosError } from 'axios';
 import { CommentType } from '@/types/questions';
 import axiosInstance from '@/api/config/axios';
@@ -10,13 +10,20 @@ type CommentBody = {
 };
 
 export const useGetComments = (questionId?: number) => {
-  return useQuery<CommentType[], AxiosError>(
+  return useInfiniteQuery<{ comments: CommentType[]; isLast: boolean; lastId: number }, AxiosError>(
     ['question', questionId, 'comments'],
-    async () => {
-      const { data } = await axiosInstance.get(`/api/golrabas/${questionId}/comments`);
-      return data.data.comments;
+    async ({ pageParam }) => {
+      const { data } = await axiosInstance.get(
+        `/api/golrabas/${questionId}/comments${pageParam ? `?searchAfterId=${pageParam}` : ''}`,
+      );
+      const { last, size, nextId } = data.data.page;
+      const lastId = size + nextId - 1;
+      return { comments: data.data.comments, isLast: last, lastId };
     },
-    { enabled: questionId !== undefined },
+    {
+      enabled: questionId !== undefined,
+      getNextPageParam: ({ isLast, lastId }) => (isLast ? undefined : lastId),
+    },
   );
 };
 
