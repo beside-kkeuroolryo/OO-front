@@ -1,10 +1,12 @@
 import { useCallback, useRef, useState } from 'react';
+import { useQueryClient } from '@tanstack/react-query';
 import { toast } from 'react-toastify';
 import PostCommentModal from '@/components/Questions/PostCommentModal';
 import useInput, { UseInputReturn } from '@/hooks/useInput';
 import { usePostComment } from '@/api/comments';
 
 export default function usePostCommentModal(comment?: UseInputReturn, questionId?: number) {
+  const queryClient = useQueryClient();
   const [isOpen, setIsOpen] = useState(false);
   const nickname = useInput('');
   const password = useInput('');
@@ -23,6 +25,7 @@ export default function usePostCommentModal(comment?: UseInputReturn, questionId
       { username: nickname?.value, password: password?.value, content: comment?.value },
       {
         onSuccess: () => {
+          queryClient.invalidateQueries([['question', questionId, 'comments']]);
           handleClose();
           comment?.onClear();
         },
