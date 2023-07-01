@@ -1,13 +1,15 @@
 import { useState } from 'react';
 import { ReactComponent as More } from '@/assets/icons/more.svg';
-import { Comment } from '@/types/questions';
 import useDeleteCommentModal from '@/hooks/useDeleteCommentModal';
+import { useGetComments } from '@/api/questions';
+import SpinnerIcon from '@/components/common/SpinnerIcon';
 
 type CommentsProps = {
-  comments?: Comment[];
+  questionId?: number;
 };
 
-export default function Comments({ comments }: CommentsProps) {
+export default function Comments({ questionId }: CommentsProps) {
+  const { data: comments, isLoading } = useGetComments(questionId);
   const [selectedCommentId, setSelectedCommentID] = useState(-1);
   const [renderDeleteCommentModal, handleOpenModal] = useDeleteCommentModal(
     selectedCommentId,
@@ -26,6 +28,7 @@ export default function Comments({ comments }: CommentsProps) {
         aria-label="comments"
         className="flex flex-col gap-8 overflow-scroll bg-dark px-24 pb-60 pt-16"
       >
+        {isLoading ? <SpinnerIcon width={30} height={30} className="mx-auto text-white" /> : null}
         {comments?.length === 0 ? (
           <div className="font-16 flex h-full items-center justify-center text-white">
             댓글이 없어요😢
