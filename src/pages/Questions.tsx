@@ -18,9 +18,11 @@ const q = {
 
 const ids = [1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15];
 
+type Choice = '' | 'a' | 'b';
+
 export default function Questions() {
   const [index, setIndex] = useState(0);
-  const [chosenItem, setChosenItem] = useState<'' | 'a' | 'b'>('');
+  const [chosenItem, setChosenItem] = useState<Choice>('');
   const comment = useInput('');
 
   const currentId = ids?.[index];
@@ -35,7 +37,7 @@ export default function Questions() {
   };
 
   const handleChoose = (event: React.MouseEvent<HTMLButtonElement>) => {
-    setChosenItem(event.currentTarget.id as '' | 'a' | 'b');
+    setChosenItem(event.currentTarget.id as Choice);
   };
 
   const handleClickNext = () => {
