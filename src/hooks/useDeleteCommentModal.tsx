@@ -1,5 +1,4 @@
 import { useCallback, useState } from 'react';
-import { useQueryClient } from '@tanstack/react-query';
 import { toast } from 'react-toastify';
 import DeleteCommentModal from '@/components/Questions/DeleteCommentModal';
 import useInput from '@/hooks/useInput';

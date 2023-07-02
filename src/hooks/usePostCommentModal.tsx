@@ -1,5 +1,4 @@
 import { useCallback, useRef, useState } from 'react';
-import { useQueryClient } from '@tanstack/react-query';
 import { toast } from 'react-toastify';
 import PostCommentModal from '@/components/Questions/PostCommentModal';
 import useInput, { UseInputReturn } from '@/hooks/useInput';
