@@ -9,19 +9,20 @@ type CommentBody = {
   content?: string;
 };
 
-export const useGetComments = (questionId?: number) => {
+export const useGetComments = (questionId?: number, enabled?: boolean) => {
   return useInfiniteQuery<{ comments: CommentType[]; isLast: boolean; lastId: number }, AxiosError>(
     ['question', questionId, 'comments'],
     async ({ pageParam }) => {
       const { data } = await axiosInstance.get(
         `/api/golrabas/${questionId}/comments${pageParam ? `?searchAfterId=${pageParam}` : ''}`,
       );
+
       const { last, size, nextId } = data.data.page;
       const lastId = size + nextId - 1;
       return { comments: data.data.comments, isLast: last, lastId };
     },
     {
-      enabled: questionId !== undefined,
+      enabled: enabled === false ? false : questionId !== undefined,
       getNextPageParam: ({ isLast, lastId }) => (isLast ? undefined : lastId),
     },
   );

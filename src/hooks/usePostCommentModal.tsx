@@ -5,15 +5,18 @@ import PostCommentModal from '@/components/Questions/PostCommentModal';
 import useInput, { UseInputReturn } from '@/hooks/useInput';
 import { usePostComment } from '@/api/comments';
 
-export default function usePostCommentModal(comment?: UseInputReturn, questionId?: number) {
-  const queryClient = useQueryClient();
+export default function usePostCommentModal(
+  comment?: UseInputReturn,
+  questionId?: number,
+  refetch?: () => void,
+) {
   const [isOpen, setIsOpen] = useState(false);
   const nickname = useInput('');
   const password = useInput('');
   const inputRef = useRef(null);
-  const { mutateAsync } = usePostComment(questionId);
+  const { mutate } = usePostComment(questionId);
 
-  const handlePostComment = async (event: React.FormEvent) => {
+  const handlePostComment = (event: React.FormEvent) => {
     event.preventDefault();
     if (nickname.value.length === 0 || password.value.length < 4) return;
 
@@ -21,18 +24,16 @@ export default function usePostCommentModal(comment?: UseInputReturn, questionId
     const passwordInputElement = inputElement as HTMLInputElement;
     passwordInputElement?.blur();
 
-    await mutateAsync(
+    mutate(
       { username: nickname?.value, password: password?.value, content: comment?.value },
       {
         onSuccess: () => {
-          queryClient.invalidateQueries([['question', questionId, 'comments']]);
+          refetch?.();
+          handleClose();
+          comment?.onClear();
         },
         onError: () => {
           toast.error('댓글 작성에 실패했습니다.', { position: 'top-right' });
-        },
-        onSettled: () => {
-          handleClose();
-          comment?.onClear();
         },
       },
     );

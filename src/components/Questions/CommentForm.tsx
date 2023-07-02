@@ -3,6 +3,7 @@ import { UseInputReturn } from '@/hooks/useInput';
 import usePostCommentModal from '@/hooks/usePostCommentModal';
 import { ReactComponent as Submit } from '@/assets/icons/submit.svg';
 import { MAX_COMMENT_LENGTH } from '@/constants/constants';
+import { useGetComments } from '@/api/comments';
 
 type CommentForm = {
   comment?: UseInputReturn;
@@ -11,7 +12,12 @@ type CommentForm = {
 };
 
 export default function CommentForm({ comment, hasChosen, questionId }: CommentForm) {
-  const [renderPostCommentModal, handleOpenModal] = usePostCommentModal(comment, questionId);
+  const { refetch } = useGetComments(questionId, false);
+  const [renderPostCommentModal, handleOpenModal] = usePostCommentModal(
+    comment,
+    questionId,
+    refetch,
+  );
   const isButtonDisabled = !hasChosen || comment?.value.length === 0;
 
   const handleLimitComment = (event: React.ChangeEvent<HTMLInputElement>) => {

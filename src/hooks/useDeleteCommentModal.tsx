@@ -9,8 +9,8 @@ export default function useDeleteCommentModal(
   questionId?: number,
   commentId?: number,
   nickname?: string,
+  refetch?: () => void,
 ) {
-  const queryClient = useQueryClient();
   const [isOpen, setIsOpen] = useState(false);
   const password = useInput('');
   const { mutate } = useDeleteComment(questionId, commentId);
@@ -22,7 +22,7 @@ export default function useDeleteCommentModal(
       { password: password.value },
       {
         onSuccess: () => {
-          queryClient.invalidateQueries(['question', questionId, 'comments']);
+          refetch?.();
           handleClose();
         },
         onError: () => {

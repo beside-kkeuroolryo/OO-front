@@ -16,10 +16,12 @@ export default function Comments({ questionId }: CommentsProps) {
   const comments = data?.pages.reduce<any[]>((acc, data) => {
     return [...acc, ...data.comments];
   }, []);
+  const { refetch } = useGetComments(questionId, false);
   const [renderDeleteCommentModal, handleOpenModal] = useDeleteCommentModal(
     questionId,
     selectedCommentId,
     comments?.filter(({ id }) => id === selectedCommentId)[0]?.username,
+    refetch,
   );
 
   const handleClickMore = (event: React.MouseEvent<HTMLButtonElement>) => {
