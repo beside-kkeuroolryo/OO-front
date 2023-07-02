@@ -83,7 +83,7 @@ export default function Questions() {
     <>
       <main className="h-full bg-dark text-primary">
         <section aria-labelledby="question" className="bg-red rounded-b-28 bg-white px-24 pb-24">
-          <Navbar isQuestion />
+          <Navbar question={question?.content} isQuestion />
           <div className="flex justify-between py-12">
             <ProgressBar index={index} />
             <div className="font-14 font-medium text-secondary">

@@ -11,9 +11,9 @@ export default function usePostCommentModal(comment?: UseInputReturn, questionId
   const nickname = useInput('');
   const password = useInput('');
   const inputRef = useRef(null);
-  const { mutate } = usePostComment(questionId);
+  const { mutateAsync } = usePostComment(questionId);
 
-  const handlePostComment = (event: React.FormEvent) => {
+  const handlePostComment = async (event: React.FormEvent) => {
     event.preventDefault();
     if (nickname.value.length === 0 || password.value.length < 4) return;
 
@@ -21,16 +21,18 @@ export default function usePostCommentModal(comment?: UseInputReturn, questionId
     const passwordInputElement = inputElement as HTMLInputElement;
     passwordInputElement?.blur();
 
-    mutate(
+    await mutateAsync(
       { username: nickname?.value, password: password?.value, content: comment?.value },
       {
         onSuccess: () => {
           queryClient.invalidateQueries([['question', questionId, 'comments']]);
-          handleClose();
-          comment?.onClear();
         },
         onError: () => {
           toast.error('댓글 작성에 실패했습니다.', { position: 'top-right' });
+        },
+        onSettled: () => {
+          handleClose();
+          comment?.onClear();
         },
       },
     );

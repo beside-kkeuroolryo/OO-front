@@ -4,6 +4,7 @@ import Home from '@/pages/Home';
 import Questions from '@/pages/Questions';
 import Result from '@/pages/Result';
 import Request from '@/pages/Request';
+import My from '@/pages/My';
 import 'react-toastify/dist/ReactToastify.css';
 
 function App() {
@@ -12,6 +13,7 @@ function App() {
       <Routes>
         <Route path="/" element={<Home />} />
         <Route path="request" element={<Request />} />
+        <Route path="my" element={<My />} />
         <Route path="questions">
           <Route path="self" element={<Questions />} />
           <Route path="couple" element={<Questions />} />
