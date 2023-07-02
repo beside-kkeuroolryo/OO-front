@@ -23,7 +23,7 @@ export default function Option({
   isChosen = false,
   hasChosen = false,
   ratio = 0,
-  isLoading = false,
+  isLoading = true,
   onClick,
 }: OptionProps) {
   const isActive = isChosen && hasChosen;
