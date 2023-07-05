@@ -23,11 +23,7 @@ export default function Questions() {
   const [choice, setChoice] = useState<Choice>('');
   const [result, setResult] = useState<{ questionId?: number; choice?: Choice }[]>([]);
   const [queryResult, setQueryResult] = useState<(string | (string | undefined)[])[]>([]);
-  const {
-    data: ids,
-    isLoading: isLoadingIds,
-    isError: isIdsError,
-  } = useGetQuestionIds(category, idsState);
+  const { data: ids, isError: isIdsError } = useGetQuestionIds(category, idsState);
 
   const currentId = idsState ? idsState?.[index] : ids?.[index];
   const {
@@ -41,7 +37,6 @@ export default function Questions() {
   const isChosenB = choice === 'b';
   const isLastQuestion = index === QUESTIONS_COUNT - 1;
 
-  const isLoading = isLoadingIds || isLoadingQuestion;
   const isError = isIdsError || isQuestionError;
 
   const init = () => {
@@ -50,7 +45,7 @@ export default function Questions() {
   };
 
   const handleChoose = (event: React.MouseEvent<HTMLButtonElement>) => {
-    if (isLoading || isError) return;
+    if (isLoadingQuestion || isError) return;
     setChoice(event.currentTarget.id as Choice);
   };
 
@@ -97,7 +92,7 @@ export default function Questions() {
                 id="question"
                 className="font-22 flex flex-nowrap break-keep px-30 text-center font-bold"
               >
-                {isLoading ? <SpinnerIcon width={30} height={30} /> : question?.content}
+                {isLoadingQuestion ? <SpinnerIcon width={30} height={30} /> : question?.content}
               </h1>
             </div>
             <div className="flex flex-col gap-12">
@@ -107,7 +102,7 @@ export default function Questions() {
                 hasChosen={hasChosen}
                 isChosen={isChosenA}
                 ratio={question?.choiceAResult}
-                isLoading={isLoading}
+                isLoading={isLoadingQuestion}
                 onClick={handleChoose}
               />
               <Option
@@ -116,7 +111,7 @@ export default function Questions() {
                 hasChosen={hasChosen}
                 isChosen={isChosenB}
                 ratio={question?.choiceBResult}
-                isLoading={isLoading}
+                isLoading={isLoadingQuestion}
                 onClick={handleChoose}
               />
             </div>
