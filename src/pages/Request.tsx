@@ -87,7 +87,7 @@ export default function Request() {
         </Button>
       </form>
       <div className="mb-70 mt-138 flex gap-16">
-        <div className="font-14 mt-6 h-fit rounded-12 border border-solid border-secondary p-10 font-medium">
+        <div className="font-14 mt-6 h-fit rounded-12 border border-solid border-secondary p-10 text-center font-medium leading-[1.4]">
           골라바에서 질문을 검토한 뒤 만들어 드릴게요!
         </div>
         <Yellow role="img" aria-label="노란색 캐릭터" />
