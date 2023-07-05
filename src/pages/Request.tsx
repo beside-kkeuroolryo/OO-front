@@ -86,11 +86,12 @@ export default function Request() {
           만들어주세요!
         </Button>
       </form>
-      <div className="font-14 absolute bottom-120 right-152 rounded-12 border border-solid border-secondary p-10 font-medium">
-        골라바에서 질문을 검토한 뒤<br />
-        만들어 드릴게요!
+      <div className="mb-70 mt-138 flex gap-16">
+        <div className="font-14 mt-6 h-fit rounded-12 border border-solid border-secondary p-10 font-medium">
+          골라바에서 질문을 검토한 뒤 만들어 드릴게요!
+        </div>
+        <Yellow role="img" aria-label="노란색 캐릭터" />
       </div>
-      <Yellow className="absolute bottom-70 right-24" />
     </main>
   );
 }
