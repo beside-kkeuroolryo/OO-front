@@ -95,7 +95,7 @@ export default function Result() {
           {result.length > 0 &&
             result?.map(([question, choice]) => (
               <li key={question} className="flex flex-col gap-8 rounded-12 bg-white p-16">
-                <div className="flex">
+                <div className="flex font-semibold">
                   <Bullet role="img" aria-label="불릿 포인트" className="shrink-0 text-dark" />
                   {question}
                 </div>
