@@ -36,6 +36,8 @@ export const usePostComment = (questionId?: number) => {
 
 export const useDeleteComment = (questionId?: number, commentId?: number) => {
   return useMutation((body: { password?: string }) => {
-    return axiosInstance.post(`/api/golrabas/${questionId}/comments/${commentId}`, body);
+    return axiosInstance.delete(`/api/golrabas/${questionId}/comments/${commentId}`, {
+      data: body,
+    });
   });
 };
