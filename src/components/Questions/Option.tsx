@@ -30,7 +30,7 @@ export default function Option({
   const isInactive = !isChosen && hasChosen;
 
   // 100%일 경우 바를 꽉 채우기 위해 크기를 늘려주고 위치조정.
-  const ratioWithOffset = ratio >= 100 ? ratio - SIZE_OFFSET * 3 + '%' : ratio + '%';
+  const ratioWithOffset = (ratio >= 100 ? ratio - SIZE_OFFSET * 3 : ratio < 5 ? 5 : ratio) + '%';
   const widthWithOffset = ratio >= 100 ? '104%' : '100%';
 
   return (
@@ -56,7 +56,6 @@ export default function Option({
               isActive ? 'opacity-100' : 'opacity-0'
             }`}
           ></div>
-
           <div
             style={{
               width: widthWithOffset,
