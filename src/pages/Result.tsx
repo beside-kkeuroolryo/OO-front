@@ -6,7 +6,7 @@ import Button from '@/components/common/Button';
 import Navbar from '@/components/common/Navbar';
 import { ReactComponent as Bullet } from '@/assets/icons/bullet.svg';
 import useCustomToast from '@/hooks/useCustomToast';
-import { USERMADE } from '@/constants/constants';
+import { USERMADE } from '@/constants/questions';
 import { usePostResult } from '@/api/questions';
 
 export default function Result() {
