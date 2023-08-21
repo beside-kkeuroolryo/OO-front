@@ -14,15 +14,23 @@ import { QUESTIONS_COUNT } from '@/constants/questions';
 
 type Choice = '' | 'a' | 'b';
 
+type Result = {
+  questionId?: number;
+  choice?: Choice;
+}[];
+
+type QueryResult = (string | (string | undefined)[])[];
+
 export default function Questions() {
   const navigate = useNavigate();
   const { pathname, state: idsState } = useLocation();
   const category = pathname.split('/')[2];
+
   const comment = useInput('');
   const [index, setIndex] = useState(0);
   const [choice, setChoice] = useState<Choice>('');
-  const [result, setResult] = useState<{ questionId?: number; choice?: Choice }[]>([]);
-  const [queryResult, setQueryResult] = useState<(string | (string | undefined)[])[]>([]);
+  const [result, setResult] = useState<Result>([]);
+  const [queryResult, setQueryResult] = useState<QueryResult>([]);
   const { data: ids, isError: isIdsError } = useGetQuestionIds(category, idsState);
 
   const currentId = idsState ? idsState?.[index] : ids?.[index];
