@@ -12,16 +12,16 @@ type CommentsProps = {
 export default function Comments({ questionId }: CommentsProps) {
   const { data, isLoading, fetchNextPage } = useGetComments(questionId);
   const [selectedCommentId, setSelectedCommentID] = useState(-1);
-  const isLast = data?.pages[data?.pages.length - 1].isLast;
+
   const comments = data?.pages.reduce<any[]>((acc, data) => {
     return [...acc, ...data.comments];
   }, []);
-  const { refetch } = useGetComments(questionId, false);
+  const isLast = data?.pages[data?.pages.length - 1].isLast;
+
   const [renderDeleteCommentModal, handleOpenModal] = useDeleteCommentModal(
     questionId,
     selectedCommentId,
     comments?.filter(({ id }) => id === selectedCommentId)[0]?.username,
-    refetch,
   );
 
   const handleClickMore = (event: React.MouseEvent<HTMLButtonElement>) => {
