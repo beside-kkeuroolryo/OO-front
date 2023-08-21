@@ -10,7 +10,7 @@ import CommentForm from '@/components/Questions/CommentForm';
 import SpinnerIcon from '@/components/common/SpinnerIcon';
 import useInput from '@/hooks/useInput';
 import { useGetQuestion, useGetQuestionIds } from '@/api/questions';
-import { QUESTIONS_COUNT } from '@/constants/constants';
+import { QUESTIONS_COUNT } from '@/constants/questions';
 
 type Choice = '' | 'a' | 'b';
 

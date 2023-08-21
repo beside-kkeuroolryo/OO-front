@@ -1,4 +1,4 @@
-import { QUESTIONS_COUNT } from '@/constants/constants';
+import { QUESTIONS_COUNT } from '@/constants/questions';
 
 const getQuestionRatios = () =>
   Array(QUESTIONS_COUNT)
