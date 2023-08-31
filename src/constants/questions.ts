@@ -1,7 +1,7 @@
 export const QUESTIONS_COUNT = 15;
 
-export const SELF = 'self';
-export const COUPLE = 'couple';
-export const FRIEND = 'friend';
-export const RANDOM = 'random';
-export const USERMADE = 'usermade';
+export const SELF = 'self' as const;
+export const COUPLE = 'couple' as const;
+export const FRIEND = 'friend' as const;
+export const RANDOM = 'random' as const;
+export const USERMADE = 'usermade' as const;
