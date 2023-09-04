@@ -14,7 +14,7 @@ export default function usePostCommentModal(comment?: UseInputReturn, questionId
 
   const handlePostComment = (event: React.FormEvent) => {
     event.preventDefault();
-    if (nickname.value.length === 0 || password.value.length < 4) return;
+    if (nickname.value.length < 1 || password.value.length < 4) return;
 
     const inputElement = inputRef.current as unknown;
     const passwordInputElement = inputElement as HTMLInputElement;
