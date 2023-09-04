@@ -2,6 +2,7 @@ import Button from '@/components/common/Button';
 import Modal, { ModalProps } from '@/components/common/Modal';
 import { UseInputReturn } from '@/hooks/useInput';
 import { MAX_LENGTH, MIN_LENGTH, PASSWORD } from '@/constants/inputs';
+import { isLessThan } from '@/utils/isLessThan';
 
 type DeleteCommentModalProps = {
   nickname?: string;
@@ -16,6 +17,9 @@ export default function DeleteCommentModal({
   onDeleteComment,
   ...props
 }: DeleteCommentModalProps) {
+  const isButtonDisabled =
+    isLessThan({ num: password?.value?.length, comparison: MIN_LENGTH[PASSWORD] }) ||
+    password?.value.includes(' ');
   return (
     <Modal className="relative" onClose={onClose} {...props}>
       <form
@@ -46,7 +50,11 @@ export default function DeleteCommentModal({
             className="font-16 w-[29rem]  rounded-12 bg-background p-16 font-medium"
           />
         </div>
-        <Button type="submit" className="font-16 mt-4 self-end px-20 py-14">
+        <Button
+          type="submit"
+          className="font-16 mt-4 self-end px-20 py-14"
+          disabled={isButtonDisabled}
+        >
           삭제하기
         </Button>
       </form>
