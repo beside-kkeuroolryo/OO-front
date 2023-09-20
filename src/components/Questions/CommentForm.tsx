@@ -31,8 +31,12 @@ export default function CommentForm({ comment, hasChosen, questionId }: CommentF
         className="font-15 fixed bottom-0 flex items-center justify-between bg-white px-24 font-medium"
         onSubmit={handleOpenPostModal}
       >
+        <label htmlFor="comment" className="a11y-hidden">
+          댓글
+        </label>
         <input
           type="text"
+          id="comment"
           minLength={MIN_LENGTH[COMMENT]}
           maxLength={MAX_LENGTH[COMMENT]}
           value={comment?.value}
@@ -41,8 +45,13 @@ export default function CommentForm({ comment, hasChosen, questionId }: CommentF
           className="my-8 w-[86%] rounded-20 bg-background px-16 py-10 placeholder:text-placeholder"
           disabled={!hasChosen}
         />
-        <button className="text-dark disabled:text-tertiary" disabled={isButtonDisabled}>
-          <Submit role="img" aria-label="댓글달기 모달 열기" />
+        <button
+          aria-label="댓글 작성 모달 열기"
+          aria-haspopup="dialog"
+          className="text-dark disabled:text-tertiary"
+          disabled={isButtonDisabled}
+        >
+          <Submit aria-hidden={true} />
         </button>
       </form>
       {renderPostCommentModal()}

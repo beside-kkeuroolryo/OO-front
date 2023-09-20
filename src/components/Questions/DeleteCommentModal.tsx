@@ -20,8 +20,9 @@ export default function DeleteCommentModal({
   const isButtonDisabled =
     isLessThan({ num: password?.value?.length, comparison: MIN_LENGTH[PASSWORD] }) ||
     password?.value.includes(' ');
+
   return (
-    <Modal className="relative" onClose={onClose} {...props}>
+    <Modal aria-label="댓글 삭제 모달" className="relative" onClose={onClose} {...props}>
       <form
         className="font-18 flex flex-col gap-24 bg-white p-24 font-semibold"
         onSubmit={onDeleteComment}

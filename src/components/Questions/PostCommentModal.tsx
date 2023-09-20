@@ -19,7 +19,7 @@ const PostCommentModal = forwardRef<HTMLInputElement, PostCommentModalProps>(
       password?.value.includes(' ');
 
     return (
-      <Modal className="relative" onClose={onClose} {...props}>
+      <Modal aria-label="댓글 작성 모달" className="relative" onClose={onClose} {...props}>
         <form
           className="font-18 flex flex-col gap-24 bg-white p-24 font-semibold"
           onSubmit={onPostComment}
