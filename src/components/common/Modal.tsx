@@ -2,13 +2,17 @@ import { useEffect, useRef } from 'react';
 import useLockBodyScroll from '@/hooks/useLockBodyScroll';
 
 export type ModalProps = {
-  children?: React.ReactNode;
   isOpen?: boolean;
   onClose?: () => void;
-  className?: string;
-};
+} & React.HTMLAttributes<HTMLDialogElement>;
 
-export default function Modal({ children, isOpen = false, onClose, className }: ModalProps) {
+export default function Modal({
+  children,
+  isOpen = false,
+  onClose,
+  className,
+  ...props
+}: ModalProps) {
   useLockBodyScroll(isOpen);
   const dialogRef = useRef<HTMLDialogElement | null>(null);
 
@@ -44,10 +48,10 @@ export default function Modal({ children, isOpen = false, onClose, className }: 
   return (
     <dialog
       aria-modal="true"
-      aria-label="댓글달기"
+      ref={dialogRef}
       className={`absolute left-1/2 top-[20%] -translate-x-1/2 rounded-12 bg-white p-0 backdrop:bg-black backdrop:bg-opacity-25`}
       onClick={handleClickOutside}
-      ref={dialogRef}
+      {...props}
     >
       <div className={`flex flex-col items-center ${className}`}>{children}</div>
     </dialog>
