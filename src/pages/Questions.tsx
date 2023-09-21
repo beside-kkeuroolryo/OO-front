@@ -31,7 +31,7 @@ export default function Questions() {
   const [choice, setChoice] = useState<Choice>('');
   const [result, setResult] = useState<Result>([]);
   const [queryResult, setQueryResult] = useState<QueryResult>([]);
-  const { data: ids, isError: isIdsError } = useGetQuestionIds(category, idsState);
+  const { data: ids, isError: isIdsError } = useGetQuestionIds(category, !idsState);
 
   const currentId = idsState ? idsState?.[index] : ids?.[index];
   const {
