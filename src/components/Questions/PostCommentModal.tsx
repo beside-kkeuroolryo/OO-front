@@ -25,9 +25,9 @@ const PostCommentModal = forwardRef<HTMLInputElement, PostCommentModalProps>(
           onSubmit={onPostComment}
         >
           <div className="flex flex-col gap-8">
-            <label htmlFor="nickname">닉네임</label>
+            <label htmlFor="nickname_post">닉네임</label>
             <input
-              id="nickname"
+              id="nickname_post"
               type="text"
               minLength={MIN_LENGTH[NICKNAME]}
               maxLength={MAX_LENGTH[NICKNAME]}
@@ -35,12 +35,13 @@ const PostCommentModal = forwardRef<HTMLInputElement, PostCommentModalProps>(
               onInput={nickname?.onChange}
               placeholder="1자리 이상 입력해주세요"
               className="font-16 w-[29rem] rounded-12 bg-background p-16 font-medium"
+              autoFocus={props.isOpen}
             />
           </div>
           <div className="flex flex-col gap-8">
-            <label htmlFor="password">비밀번호</label>
+            <label htmlFor="password_post">비밀번호</label>
             <input
-              id="password"
+              id="password_post"
               type="password"
               minLength={MIN_LENGTH[PASSWORD]}
               maxLength={MAX_LENGTH[PASSWORD]}

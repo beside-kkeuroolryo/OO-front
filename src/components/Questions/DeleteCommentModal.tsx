@@ -23,14 +23,11 @@ export default function DeleteCommentModal({
 
   return (
     <Modal aria-label="댓글 삭제 모달" className="relative" onClose={onClose} {...props}>
-      <form
-        className="font-18 flex flex-col gap-24 bg-white p-24 font-semibold"
-        onSubmit={onDeleteComment}
-      >
+      <form className="font-18 flex flex-col gap-24 p-24 font-semibold" onSubmit={onDeleteComment}>
         <div className="flex flex-col gap-8">
-          <label htmlFor="nickname">닉네임</label>
+          <label htmlFor="nickname_delete">닉네임</label>
           <input
-            id="nickname"
+            id="nickname_delete"
             type="text"
             defaultValue={nickname}
             placeholder="1자리 이상 입력해주세요"
@@ -39,16 +36,16 @@ export default function DeleteCommentModal({
           />
         </div>
         <div className="flex flex-col gap-8">
-          <label htmlFor="password">비밀번호</label>
+          <label htmlFor="password_delete">비밀번호</label>
           <input
-            id="password"
+            id="password_delete"
             type="password"
             minLength={MIN_LENGTH[PASSWORD]}
             maxLength={MAX_LENGTH[PASSWORD]}
             value={password?.value}
             onInput={password?.onChange}
             placeholder="4자리 이상 입력해주세요"
-            className="font-16 w-[29rem]  rounded-12 bg-background p-16 font-medium"
+            className="font-16 w-[29rem] rounded-12 bg-background p-16 font-medium"
           />
         </div>
         <Button
