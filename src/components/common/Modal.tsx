@@ -1,6 +1,7 @@
 import { useEffect, useRef } from 'react';
 import useLockBodyScroll from '@/hooks/useLockBodyScroll';
 import { ReactComponent as Close } from '@/assets/icons/close.svg';
+import { useFocusTrap } from '@/hooks/useFocusTrap';
 
 export type ModalProps = {
   isOpen?: boolean;
@@ -14,8 +15,10 @@ export default function Modal({
   className,
   ...props
 }: ModalProps) {
-  useLockBodyScroll(isOpen);
   const dialogRef = useRef<HTMLDialogElement | null>(null);
+
+  useLockBodyScroll(isOpen);
+  useFocusTrap(isOpen, dialogRef);
 
   const handleClickOutside = (e: React.MouseEvent) => {
     const dialogElement = dialogRef.current;
