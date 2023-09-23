@@ -46,6 +46,7 @@ export default function DeleteCommentModal({
             onInput={password?.onChange}
             placeholder="4자리 이상 입력해주세요"
             className="font-16 w-[29rem] rounded-12 bg-background p-16 font-medium"
+            autoFocus={props.isOpen}
           />
         </div>
         <Button
