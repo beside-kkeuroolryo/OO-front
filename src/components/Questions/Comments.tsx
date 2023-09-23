@@ -36,10 +36,7 @@ export default function Comments({ questionId }: CommentsProps) {
 
   return (
     <>
-      <section
-        aria-labelledby="comments"
-        className="flex flex-col gap-8 overflow-scroll bg-dark px-24 pb-60 pt-16"
-      >
+      <section aria-labelledby="comments" className="flex flex-col gap-8 bg-dark px-24 pb-60 pt-16">
         <h2 id="comments" className="a11y-hidden">
           댓글 리스트
         </h2>
