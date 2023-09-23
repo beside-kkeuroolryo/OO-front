@@ -19,7 +19,7 @@ export default function Modal({
   const handleClickOutside = (e: React.MouseEvent) => {
     const dialogElement = dialogRef.current;
 
-    if (!dialogElement || dialogElement !== e.target) return;
+    if (!dialogElement || dialogElement.contains(e.target as HTMLElement)) return;
     onClose?.();
   };
 
@@ -39,7 +39,7 @@ export default function Modal({
   useEffect(() => {
     const dialogElement = dialogRef.current;
     if (isOpen && dialogElement) {
-      dialogElement.showModal();
+      dialogElement.show();
     } else if (!isOpen && dialogElement) {
       dialogElement.close();
     }
@@ -47,14 +47,20 @@ export default function Modal({
   }, [isOpen]);
 
   return (
-    <dialog
-      aria-modal="true"
-      ref={dialogRef}
-      className={`absolute left-1/2 top-[20%] -translate-x-1/2 rounded-12 bg-white p-0 backdrop:bg-black backdrop:bg-opacity-25`}
+    <div
+      className={`fixed left-0 top-0 z-10 h-full w-full bg-dark bg-opacity-80 ${
+        isOpen ? 'block' : 'hidden'
+      }`}
       onClick={handleClickOutside}
-      {...props}
     >
-      <div className={`flex flex-col items-center ${className}`}>{children}</div>
-    </dialog>
+      <dialog
+        aria-modal="true"
+        ref={dialogRef}
+        className={`absolute left-1/2 top-[20%] z-50 -translate-x-1/2 rounded-12 bg-white p-0`}
+        {...props}
+      >
+        <div className={`flex flex-col items-center ${className}`}>{children}</div>
+      </dialog>
+    </div>
   );
 }
