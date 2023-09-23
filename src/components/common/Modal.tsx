@@ -1,5 +1,6 @@
 import { useEffect, useRef } from 'react';
 import useLockBodyScroll from '@/hooks/useLockBodyScroll';
+import { ReactComponent as Close } from '@/assets/icons/close.svg';
 
 export type ModalProps = {
   isOpen?: boolean;
@@ -59,6 +60,14 @@ export default function Modal({
         className={`absolute left-1/2 top-[20%] z-50 -translate-x-1/2 rounded-12 bg-white p-0`}
         {...props}
       >
+        <button
+          aria-label="모달 닫기"
+          type="button"
+          className="absolute -top-40 right-0"
+          onClick={onClose}
+        >
+          <Close aria-hidden={true} />
+        </button>
         <div className={`flex flex-col items-center ${className}`}>{children}</div>
       </dialog>
     </div>
