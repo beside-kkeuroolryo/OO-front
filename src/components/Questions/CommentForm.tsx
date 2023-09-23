@@ -28,7 +28,7 @@ export default function CommentForm({ comment, hasChosen, questionId }: CommentF
   return (
     <>
       <form
-        className="font-15 fixed bottom-0 flex items-center justify-between bg-white px-24 font-medium"
+        className="font-15 fixed bottom-0 flex w-full max-w-[39rem] items-center justify-between bg-white px-24 font-medium"
         onSubmit={handleOpenPostModal}
       >
         <label htmlFor="comment" className="a11y-hidden">
