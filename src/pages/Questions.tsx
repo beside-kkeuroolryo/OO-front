@@ -79,7 +79,7 @@ export default function Questions() {
   }, [idsState, ids, result, queryResult, isLastQuestion, category, navigate]);
 
   useEffect(() => {
-    if (isError) toast.error('문제를 불러오지 못했습니다.');
+    if (isError) toast.error('질문을 불러오지 못했습니다.');
   }, [isError]);
 
   return (
