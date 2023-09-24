@@ -2,7 +2,7 @@ import { useCallback, useRef, useState } from 'react';
 import { toast } from 'react-toastify';
 import PostCommentModal from '@/components/Questions/PostCommentModal';
 import useInput, { UseInputReturn } from '@/hooks/useInput';
-import { useGetComments, usePostComment } from '@/api/comments';
+import { usePostComment } from '@/api/comments';
 
 export default function usePostCommentModal(comment?: UseInputReturn, questionId?: number) {
   const [isOpen, setIsOpen] = useState(false);
@@ -10,11 +10,10 @@ export default function usePostCommentModal(comment?: UseInputReturn, questionId
   const password = useInput('');
   const inputRef = useRef(null);
   const { mutate } = usePostComment(questionId);
-  const { refetch } = useGetComments(questionId, false);
 
   const handlePostComment = (event: React.FormEvent) => {
     event.preventDefault();
-    if (nickname.value.length === 0 || password.value.length < 4) return;
+    if (nickname.value.length < 1 || password.value.length < 4) return;
 
     const inputElement = inputRef.current as unknown;
     const passwordInputElement = inputElement as HTMLInputElement;
@@ -24,7 +23,6 @@ export default function usePostCommentModal(comment?: UseInputReturn, questionId
       { username: nickname?.value, password: password?.value, content: comment?.value },
       {
         onSuccess: () => {
-          refetch?.();
           handleClose();
           comment?.onClear();
         },

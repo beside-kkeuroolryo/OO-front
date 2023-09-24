@@ -31,7 +31,7 @@ export default function Questions() {
   const [choice, setChoice] = useState<Choice>('');
   const [result, setResult] = useState<Result>([]);
   const [queryResult, setQueryResult] = useState<QueryResult>([]);
-  const { data: ids, isError: isIdsError } = useGetQuestionIds(category, idsState);
+  const { data: ids, isError: isIdsError } = useGetQuestionIds(category, !idsState);
 
   const currentId = idsState ? idsState?.[index] : ids?.[index];
   const {
@@ -79,7 +79,7 @@ export default function Questions() {
   }, [idsState, ids, result, queryResult, isLastQuestion, category, navigate]);
 
   useEffect(() => {
-    if (isError) toast.error('문제를 불러오지 못했습니다.');
+    if (isError) toast.error('질문을 불러오지 못했습니다.');
   }, [isError]);
 
   return (
@@ -87,12 +87,7 @@ export default function Questions() {
       <main className="h-full bg-dark text-primary">
         <section aria-labelledby="question" className="bg-red rounded-b-28 bg-white px-24 pb-24">
           <Navbar question={question?.content} isQuestion />
-          <div className="flex justify-between py-12">
-            <ProgressBar index={index} />
-            <div className="font-14 font-medium text-secondary">
-              {index + 1}/{QUESTIONS_COUNT}
-            </div>
-          </div>
+          <ProgressBar index={index} />
           <div className="flex flex-col gap-24">
             <div className="mt-16 flex w-full flex-col items-center gap-8">
               <div className="font-16 font-semibold text-secondary">과연 당신의 선택은?</div>

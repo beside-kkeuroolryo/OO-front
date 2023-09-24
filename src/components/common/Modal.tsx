@@ -1,30 +1,39 @@
 import { useEffect, useRef } from 'react';
 import useLockBodyScroll from '@/hooks/useLockBodyScroll';
+import { ReactComponent as Close } from '@/assets/icons/close.svg';
+import { useFocusTrap } from '@/hooks/useFocusTrap';
 
 export type ModalProps = {
-  children?: React.ReactNode;
   isOpen?: boolean;
   onClose?: () => void;
-  className?: string;
-};
+} & React.HTMLAttributes<HTMLDialogElement>;
 
-export default function Modal({ children, isOpen = false, onClose, className }: ModalProps) {
-  useLockBodyScroll(isOpen);
+export default function Modal({
+  children,
+  isOpen = false,
+  onClose,
+  className,
+  ...props
+}: ModalProps) {
   const dialogRef = useRef<HTMLDialogElement | null>(null);
+
+  useLockBodyScroll(isOpen);
+  useFocusTrap(isOpen, dialogRef);
 
   const handleClickOutside = (e: React.MouseEvent) => {
     const dialogElement = dialogRef.current;
 
-    if (!dialogElement || dialogElement !== e.target) return;
+    if (!dialogElement || dialogElement.contains(e.target as HTMLElement)) return;
     onClose?.();
   };
 
   useEffect(() => {
-    const handleKeyDown = (e: KeyboardEvent) => {
-      if (e.code === 'Escape') {
+    const handleKeyDown = (event: KeyboardEvent) => {
+      if (event.key === 'Escape') {
         onClose?.();
       }
     };
+
     if (isOpen) {
       document.addEventListener('keydown', handleKeyDown);
       return () => document.removeEventListener('keydown', handleKeyDown);
@@ -34,7 +43,7 @@ export default function Modal({ children, isOpen = false, onClose, className }: 
   useEffect(() => {
     const dialogElement = dialogRef.current;
     if (isOpen && dialogElement) {
-      dialogElement.showModal();
+      dialogElement.show();
     } else if (!isOpen && dialogElement) {
       dialogElement.close();
     }
@@ -42,14 +51,28 @@ export default function Modal({ children, isOpen = false, onClose, className }: 
   }, [isOpen]);
 
   return (
-    <dialog
-      aria-modal="true"
-      aria-label="댓글달기"
-      className={`absolute left-1/2 top-[20%] -translate-x-1/2 rounded-12 bg-white p-0 backdrop:bg-black backdrop:bg-opacity-25`}
+    <div
+      className={`fixed left-0 top-0 z-10 h-full w-full bg-dark bg-opacity-80 ${
+        isOpen ? 'block' : 'hidden'
+      }`}
       onClick={handleClickOutside}
-      ref={dialogRef}
     >
-      <div className={`flex flex-col items-center ${className}`}>{children}</div>
-    </dialog>
+      <dialog
+        aria-modal="true"
+        ref={dialogRef}
+        className={`absolute left-1/2 top-[20%] z-50 -translate-x-1/2 rounded-12 bg-white p-0`}
+        {...props}
+      >
+        <button
+          aria-label="모달 닫기"
+          type="button"
+          className="absolute -top-40 right-0"
+          onClick={onClose}
+        >
+          <Close aria-hidden={true} />
+        </button>
+        <div className={`flex flex-col items-center ${className}`}>{children}</div>
+      </dialog>
+    </div>
   );
 }

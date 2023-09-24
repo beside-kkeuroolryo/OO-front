@@ -2,7 +2,7 @@ import { useCallback, useState } from 'react';
 import { toast } from 'react-toastify';
 import DeleteCommentModal from '@/components/Questions/DeleteCommentModal';
 import useInput from '@/hooks/useInput';
-import { useDeleteComment, useGetComments } from '@/api/comments';
+import { useDeleteComment } from '@/api/comments';
 
 export default function useDeleteCommentModal(
   questionId?: number,
@@ -12,7 +12,6 @@ export default function useDeleteCommentModal(
   const [isOpen, setIsOpen] = useState(false);
   const password = useInput('');
   const { mutate } = useDeleteComment(questionId, commentId);
-  const { refetch } = useGetComments(questionId);
 
   const handleDeleteComment = (event: React.FormEvent) => {
     event.preventDefault();
@@ -21,7 +20,6 @@ export default function useDeleteCommentModal(
       { password: password.value },
       {
         onSuccess: () => {
-          refetch?.();
           handleClose();
         },
         onError: () => {

@@ -93,8 +93,8 @@ export default function Result() {
       >
         <ul className="flex flex-col gap-10">
           {result.length > 0 &&
-            result?.map(([question, choice]) => (
-              <li key={question} className="flex flex-col gap-8 rounded-12 bg-white p-16">
+            result?.map(([question, choice], index) => (
+              <li key={ids[index]} className="flex flex-col gap-8 rounded-12 bg-white p-16">
                 <div className="flex font-semibold">
                   <Bullet role="img" aria-label="불릿 포인트" className="shrink-0 text-dark" />
                   {question}

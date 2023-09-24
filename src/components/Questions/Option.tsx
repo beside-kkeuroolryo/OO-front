@@ -31,7 +31,7 @@ export default function Option({
 
   // 100%일 경우 바를 꽉 채우기 위해 크기를 늘려주고 위치조정.
   const ratioWithOffset = (ratio >= 100 ? ratio - SIZE_OFFSET * 3 : ratio < 5 ? 5 : ratio) + '%';
-  const widthWithOffset = ratio >= 100 ? '104%' : '100%';
+  const widthWithOffsetClass = ratio >= 100 ? 'w-[104%]' : 'w-[100%]';
 
   return (
     <button
@@ -49,21 +49,19 @@ export default function Option({
         <>
           <div
             style={{
-              width: widthWithOffset,
               transform: `${hasChosen ? `translateX(${ratioWithOffset})` : '0%'}`,
             }}
             className={`absolute -left-[100%] -top-[2%] h-[104%] rounded-12 bg-cyan transition-[transform] duration-500 ease-out ${
               isActive ? 'opacity-100' : 'opacity-0'
-            }`}
+            } ${widthWithOffsetClass}`}
           ></div>
           <div
             style={{
-              width: widthWithOffset,
               transform: `${hasChosen ? `translateX(${ratioWithOffset})` : '0%'}`,
             }}
             className={`absolute -left-[100%] -top-[2%] h-[104%] rounded-12 bg-tertiary transition-[transform] duration-500 ease-out ${
               isInactive ? 'opacity-100' : 'opacity-0'
-            }`}
+            } ${widthWithOffsetClass}`}
           ></div>
 
           <div className="z-0">{content}</div>
