@@ -63,7 +63,11 @@ export default function Navbar({
       )}
       {isQuestion && (
         <>
-          <NavIconLink to="/" aria-label="홈" Icon={<Home aria-hidden={true} />} />
+          <NavIconLink
+            to="/"
+            aria-label="홈"
+            Icon={<Home aria-hidden={true} className="text-dark" />}
+          />
           <button type="button" aria-label="저장" onClick={handleSave}>
             <Star
               aria-hidden={true}
