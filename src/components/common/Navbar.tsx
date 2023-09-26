@@ -23,8 +23,10 @@ export default function Navbar({
   isMy,
   isRequest,
   question,
-  className = isResult ? 'flex-row-reverse' : '',
+  className = '',
 }: NavbarProps) {
+  className = isResult ? `flex-row-reverse ${className}` : className;
+
   const navigate = useNavigate();
   const [questions, setQuestions] = useLocalStorage('questions', []);
 
