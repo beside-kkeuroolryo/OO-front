@@ -44,8 +44,8 @@ export default function My() {
   return (
     <>
       <main className="mb-100 mt-46 flex h-full w-full flex-col">
-        <Navbar isMy={true} className="fixed top-0 z-10 w-full max-w-[39rem] bg-white px-24" />
-        <div className="bg-dark px-24 pb-[12.2rem]">
+        <Navbar isMy={true} className="fixed top-0 z-10 w-full max-w-mobile bg-white px-default" />
+        <div className="bg-dark px-default pb-[12.2rem]">
           <section aria-labelledby="category" className="pb-38 pt-30">
             <h2 id="category" className="a11y-hidden">
               카테고리
@@ -80,9 +80,9 @@ export default function My() {
             </ul>
           </section>
         </div>
-        <div className="fixed bottom-0 w-full max-w-[39rem] bg-white p-24">
+        <div className="fixed bottom-0 w-full max-w-mobile bg-white px-default py-24">
           <Button
-            className="font-18 w-full max-w-[34.2rem] py-[1.9rem] font-semibold"
+            className="font-18 w-full max-w-[calc(var(--max-width)-2*var(--padding))] py-[1.9rem] font-semibold"
             disabled={selectedIndexes.length === 0}
             onClick={handleOpenModal}
           >

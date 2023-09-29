@@ -9,7 +9,7 @@ import 'react-toastify/dist/ReactToastify.css';
 
 function App() {
   return (
-    <div className="mx-auto h-full max-w-[39rem]">
+    <div className="mx-auto h-full max-w-mobile">
       <Routes>
         <Route path="/" element={<Home />} />
         <Route path="request" element={<Request />} />

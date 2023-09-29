@@ -85,7 +85,10 @@ export default function Questions() {
   return (
     <>
       <main className="h-full bg-dark text-primary">
-        <section aria-labelledby="question" className="bg-red rounded-b-28 bg-white px-24 pb-24">
+        <section
+          aria-labelledby="question"
+          className="bg-red rounded-b-28 bg-white px-default pb-24"
+        >
           <Navbar question={question?.content} isQuestion />
           <ProgressBar index={index} />
           <div className="flex flex-col gap-24">
