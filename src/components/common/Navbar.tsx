@@ -1,10 +1,10 @@
 import { Link, useNavigate } from 'react-router-dom';
+import NavIconLink from '@/components/common/NavIconLink';
+import useLocalStorage from '@/hooks/useLocalStorage';
 import { ReactComponent as Logo } from '@/assets/icons/logo.svg';
 import { ReactComponent as Back } from '@/assets/icons/back.svg';
 import { ReactComponent as Star } from '@/assets/icons/star.svg';
 import { ReactComponent as Home } from '@/assets/icons/home.svg';
-import NavIconLink from '@/components/common/NavIconLink';
-import useLocalStorage from '@/hooks/useLocalStorage';
 
 type NavbarProps = {
   isHome?: boolean;
@@ -49,7 +49,7 @@ export default function Navbar({
   };
 
   return (
-    <nav className={`relative flex items-center justify-between pb-[1.1rem] pt-18 ${className}`}>
+    <nav className={`flex items-center justify-between pb-10 pt-12 ${className}`}>
       {isHome && (
         <>
           <Link to="/" aria-label="골라바 홈">

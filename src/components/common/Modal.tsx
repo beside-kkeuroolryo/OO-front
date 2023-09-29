@@ -1,7 +1,7 @@
 import { useEffect, useRef } from 'react';
 import useLockBodyScroll from '@/hooks/useLockBodyScroll';
-import { ReactComponent as Close } from '@/assets/icons/close.svg';
 import { useFocusTrap } from '@/hooks/useFocusTrap';
+import { ReactComponent as Close } from '@/assets/icons/close.svg';
 
 export type ModalProps = {
   isOpen?: boolean;
