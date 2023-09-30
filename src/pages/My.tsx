@@ -1,4 +1,4 @@
-import { useCallback, useEffect, useRef, useState } from 'react';
+import { useCallback, useState } from 'react';
 import Navbar from '@/components/common/Navbar';
 import Button from '@/components/common/Button';
 import ConfirmDeleteModal from '@/components/My/ConfirmDeleteModal';
@@ -18,7 +18,7 @@ const categoryMap = {
 
 export default function My() {
   const [questions, setQuestions] = useQuestionsLocalStorage();
-  const [selectedIndexes, setSelectedIndexes] = useState<number[]>([]);
+  const [selectedIds, setSelectedIds] = useState<number[]>([]);
   const [selectedCategory, setSelectedCategory] = useState<CategoryType>('ALL');
   const [isOpen, setIsOpen] = useState(false);
   const filteredQuestions =
@@ -29,7 +29,7 @@ export default function My() {
   const handleClickCategory = (category: CategoryType) => setSelectedCategory(category);
 
   const handleToggleCheckbox = (questionId: number) => {
-    setSelectedIndexes((prev) => {
+    setSelectedIds((prev) => {
       if (prev.includes(questionId)) {
         prev = prev.filter((value) => value !== questionId);
       } else {
@@ -41,6 +41,8 @@ export default function My() {
 
   const handleDelete = (event: React.FormEvent<HTMLFormElement>) => {
     event.preventDefault();
+    setQuestions((prev) => prev.filter((question) => !selectedIds.includes(question.id)));
+    setSelectedIds([]);
     handleCloseModal();
   };
 
@@ -89,7 +91,7 @@ export default function My() {
                   key={question.id}
                   question={question}
                   handleCheck={() => handleToggleCheckbox(question.id)}
-                  isChecked={selectedIndexes.includes(question.id)}
+                  isChecked={selectedIds.includes(question.id)}
                 />
               ))}
             </ul>
@@ -98,10 +100,10 @@ export default function My() {
         <div className="fixed bottom-0 w-full max-w-mobile bg-white px-default py-24">
           <Button
             className="font-18 w-full max-w-[calc(var(--max-width)-2*var(--padding))] py-[1.9rem] font-semibold"
-            disabled={selectedIndexes.length === 0}
+            disabled={selectedIds.length === 0}
             onClick={handleOpenModal}
           >
-            삭제하기
+            {selectedIds.length === 0 ? '삭제하기' : `${selectedIds.length}개의 질문 삭제하기`}
           </Button>
         </div>
       </main>
