@@ -7,7 +7,7 @@ import { SELF, COUPLE, FRIEND, RANDOM, USERMADE } from '@/constants/questions';
 
 export const categoryKeys = [SELF, COUPLE, FRIEND, RANDOM, USERMADE] as const;
 
-type CategoryKeys = (typeof categoryKeys)[number];
+export type CategoryKeys = (typeof categoryKeys)[number];
 
 export const CATEGORIES: Record<
   CategoryKeys,

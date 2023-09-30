@@ -1,18 +1,30 @@
-import { useCallback, useState } from 'react';
+import { useCallback, useEffect, useRef, useState } from 'react';
 import Navbar from '@/components/common/Navbar';
 import Button from '@/components/common/Button';
 import ConfirmDeleteModal from '@/components/My/ConfirmDeleteModal';
 import QuestionItem from '@/components/My/QuestionItem';
 import useQuestionsLocalStorage from '@/hooks/useQuestionsLocalStorage';
+import { categoryKeys, CategoryKeys } from '@/constants/categories';
 
 const categories = ['ALL', '셀프', '커플', '우정', '랜덤', '같이해요'] as const;
 type CategoryType = (typeof categories)[number];
+
+const categoryMap = {
+  ALL: 'all',
+  ...Object.fromEntries(
+    categories.slice(1).map((category, index) => [category, categoryKeys[index]]),
+  ),
+} as Record<CategoryType, 'all' | CategoryKeys>;
 
 export default function My() {
   const [questions, setQuestions] = useQuestionsLocalStorage();
   const [selectedIndexes, setSelectedIndexes] = useState<number[]>([]);
   const [selectedCategory, setSelectedCategory] = useState<CategoryType>('ALL');
   const [isOpen, setIsOpen] = useState(false);
+  const filteredQuestions =
+    selectedCategory === 'ALL'
+      ? questions
+      : questions.filter((question) => question.category === categoryMap[selectedCategory]);
 
   const handleClickCategory = (category: CategoryType) => setSelectedCategory(category);
 
@@ -52,6 +64,7 @@ export default function My() {
             <div className="flex flex-wrap gap-8">
               {categories.map((category) => (
                 <button
+                  key={category}
                   type="button"
                   className={`font-14 rounded-[1rem] px-18 py-10 font-semibold ${
                     category === selectedCategory ? 'bg-cyan text-dark' : 'bg-primary text-tertiary'
@@ -68,10 +81,10 @@ export default function My() {
               저장한 질문 리스트
             </h2>
             <div className="font-14 mb-10 font-semibold text-white">
-              {questions.length}개의 질문
+              {filteredQuestions.length}개의 질문
             </div>
             <ul className="flex h-full flex-col gap-8">
-              {questions.map((question) => (
+              {filteredQuestions.map((question) => (
                 <QuestionItem
                   key={question.id}
                   question={question}
