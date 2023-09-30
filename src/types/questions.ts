@@ -8,3 +8,11 @@ export type QuestionType = {
   choiceAResult: number;
   choiceBResult: number;
 };
+
+export type SavedQuestionType = {
+  id: number;
+  category: string;
+  content: string;
+  optionA: string;
+  optionB: string;
+};

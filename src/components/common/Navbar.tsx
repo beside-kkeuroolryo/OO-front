@@ -1,6 +1,7 @@
 import { Link, useNavigate } from 'react-router-dom';
 import NavIconLink from '@/components/common/NavIconLink';
-import useLocalStorage from '@/hooks/useLocalStorage';
+import useQuestionsLocalStorage from '@/hooks/useQuestionsLocalStorage';
+import { SavedQuestionType } from '@/types/questions';
 import { ReactComponent as Logo } from '@/assets/icons/logo.svg';
 import { ReactComponent as Back } from '@/assets/icons/back.svg';
 import { ReactComponent as Star } from '@/assets/icons/star.svg';
@@ -12,7 +13,7 @@ type NavbarProps = {
   isResult?: boolean;
   isMy?: boolean;
   isRequest?: boolean;
-  question?: string;
+  questionToSave?: SavedQuestionType;
   className?: string;
 };
 
@@ -22,13 +23,13 @@ export default function Navbar({
   isResult,
   isMy,
   isRequest,
-  question,
+  questionToSave,
   className = '',
 }: NavbarProps) {
   className = isResult ? `flex-row-reverse ${className}` : className;
 
   const navigate = useNavigate();
-  const [questions, setQuestions] = useLocalStorage('questions', []);
+  const [questions, setQuestions] = useQuestionsLocalStorage();
 
   const handlGoBack = (event: React.MouseEvent) => {
     event.preventDefault();
@@ -36,13 +37,13 @@ export default function Navbar({
   };
 
   const handleSave = () => {
-    setQuestions((prev: string[]) => {
-      if (question) {
-        if (prev.includes(question)) {
-          prev = prev.filter((value) => value !== question);
-        } else {
-          prev = [...prev, question];
-        }
+    if (!questionToSave) return;
+
+    setQuestions((prev) => {
+      if (prev.some((savedQuestion) => savedQuestion.id === questionToSave.id)) {
+        prev = prev.filter((savedQuestion) => savedQuestion.id !== questionToSave.id);
+      } else {
+        prev = [...prev, questionToSave];
       }
       return prev;
     });
@@ -70,10 +71,19 @@ export default function Navbar({
             aria-label="홈"
             Icon={<Home aria-hidden={true} className="text-dark" />}
           />
-          <button type="button" aria-label="저장" onClick={handleSave}>
+          <button
+            type="button"
+            aria-label="저장"
+            onClick={handleSave}
+            disabled={!questionToSave?.content}
+          >
             <Star
               aria-hidden={true}
-              className={`${questions.includes(question) ? 'text-dark' : 'text-tertiary'}`}
+              className={`${
+                questions.some((question) => question.id === questionToSave?.id)
+                  ? 'text-dark'
+                  : 'text-tertiary'
+              }`}
             />
           </button>
         </>

@@ -1,8 +1,15 @@
 import { useState, useEffect } from 'react';
 import { toast } from 'react-toastify';
+import { SavedQuestionType } from '@/types/questions';
 
-const useLocalStorage = (key: string, defaultValue: any) => {
-  const [value, setValue] = useState(() => {
+const key = 'questions';
+const defaultValue: SavedQuestionType[] = [];
+
+export default function useQuestionsLocalStorage(): [
+  SavedQuestionType[],
+  React.Dispatch<React.SetStateAction<SavedQuestionType[]>>,
+] {
+  const [questions, setQuestions] = useState<SavedQuestionType[]>(() => {
     let currentValue;
 
     try {
@@ -16,7 +23,7 @@ const useLocalStorage = (key: string, defaultValue: any) => {
 
   useEffect(() => {
     try {
-      localStorage.setItem(key, JSON.stringify(value));
+      localStorage.setItem(key, JSON.stringify(questions));
     } catch (error) {
       if (error instanceof Error) {
         toast.error(
@@ -28,9 +35,7 @@ const useLocalStorage = (key: string, defaultValue: any) => {
         );
       }
     }
-  }, [value, key]);
+  }, [questions]);
 
-  return [value, setValue];
-};
-
-export default useLocalStorage;
+  return [questions, setQuestions];
+}

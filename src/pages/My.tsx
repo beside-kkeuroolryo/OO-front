@@ -3,25 +3,25 @@ import Navbar from '@/components/common/Navbar';
 import Button from '@/components/common/Button';
 import ConfirmDeleteModal from '@/components/My/ConfirmDeleteModal';
 import QuestionItem from '@/components/My/QuestionItem';
-import useLocalStorage from '@/hooks/useLocalStorage';
+import useQuestionsLocalStorage from '@/hooks/useQuestionsLocalStorage';
 
 const categories = ['ALL', '셀프', '커플', '우정', '랜덤', '같이해요'] as const;
 type CategoryType = (typeof categories)[number];
 
 export default function My() {
-  const [questions, setQuestions] = useLocalStorage('questions', []);
+  const [questions, setQuestions] = useQuestionsLocalStorage();
   const [selectedIndexes, setSelectedIndexes] = useState<number[]>([]);
   const [selectedCategory, setSelectedCategory] = useState<CategoryType>('ALL');
   const [isOpen, setIsOpen] = useState(false);
 
   const handleClickCategory = (category: CategoryType) => setSelectedCategory(category);
 
-  const handleToggleCheckbox = (index: number) => {
+  const handleToggleCheckbox = (questionId: number) => {
     setSelectedIndexes((prev) => {
-      if (prev.includes(index)) {
-        prev = prev.filter((value) => value !== index);
+      if (prev.includes(questionId)) {
+        prev = prev.filter((value) => value !== questionId);
       } else {
-        prev = [...prev, index];
+        prev = [...prev, questionId];
       }
       return prev;
     });
@@ -29,7 +29,6 @@ export default function My() {
 
   const handleDelete = (event: React.FormEvent<HTMLFormElement>) => {
     event.preventDefault();
-    setQuestions(questions.filter((_: string, index: number) => !selectedIndexes.includes(index)));
     handleCloseModal();
   };
 
@@ -43,7 +42,7 @@ export default function My() {
 
   return (
     <>
-      <main className="mb-100 mt-46 flex h-full w-full flex-col">
+      <main className="flex h-full w-full flex-col bg-dark pt-46">
         <Navbar isMy={true} className="fixed top-0 z-10 w-full max-w-mobile bg-white px-default" />
         <div className="bg-dark px-default pb-[12.2rem]">
           <section aria-labelledby="category" className="pb-38 pt-30">
@@ -65,16 +64,19 @@ export default function My() {
             </div>
           </section>
           <section aria-labelledby="list">
-            <h2 id="list" className="a11y-hidden max-w-">
+            <h2 id="list" className="a11y-hidden">
               저장한 질문 리스트
             </h2>
-            <div className="font-14 mb-10 font-semibold text-white">2개의 질문</div>
+            <div className="font-14 mb-10 font-semibold text-white">
+              {questions.length}개의 질문
+            </div>
             <ul className="flex h-full flex-col gap-8">
-              {questions.map((question: string, index: number) => (
+              {questions.map((question) => (
                 <QuestionItem
+                  key={question.id}
                   question={question}
-                  handleCheck={() => handleToggleCheckbox(index)}
-                  isChecked={selectedIndexes.includes(index)}
+                  handleCheck={() => handleToggleCheckbox(question.id)}
+                  isChecked={selectedIndexes.includes(question.id)}
                 />
               ))}
             </ul>
