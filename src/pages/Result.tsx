@@ -81,7 +81,7 @@ export default function Result() {
       url: shareUrl,
     };
 
-    if (navigator.share && navigator.canShare && navigator.canShare(data)) {
+    if (navigator['share'] && navigator.canShare && navigator.canShare(data)) {
       return share(data);
     }
     return copy();
