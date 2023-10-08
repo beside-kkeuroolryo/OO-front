@@ -113,7 +113,7 @@ export default function Navbar({
             Icon={<Back aria-hidden={true} />}
             onClick={handlGoBack}
           />
-          <h1 className="font-18 center font-medium text-header">골라바 만들기</h1>
+          <h1 className="font-18 center font-medium text-header">밸런스 게임 만들기</h1>
         </>
       )}
     </nav>
