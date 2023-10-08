@@ -5,6 +5,7 @@ import ConfirmDeleteModal from '@/components/My/ConfirmDeleteModal';
 import QuestionItem from '@/components/My/QuestionItem';
 import useQuestionsLocalStorage from '@/hooks/useQuestionsLocalStorage';
 import { categoryKeys, CategoryKeys } from '@/constants/categories';
+import { ReactComponent as Blue } from '@/assets/images/blue.svg';
 
 const categories = ['ALL', '셀프', '커플', '우정', '랜덤', '같이해요'] as const;
 type CategoryType = (typeof categories)[number];
@@ -82,9 +83,21 @@ export default function My() {
             <h2 id="list" className="a11y-hidden">
               저장한 질문 리스트
             </h2>
-            <div className="font-14 mb-10 font-semibold text-white">
-              {filteredQuestions.length}개의 질문
-            </div>
+
+            {filteredQuestions.length > 0 && (
+              <div className="font-14 mb-10 font-semibold text-white">
+                {filteredQuestions.length}개의 질문
+              </div>
+            )}
+
+            {filteredQuestions.length === 0 ? (
+              <div className="mt-112 flex flex-col items-center">
+                <Blue aria-hidden={true} />
+                <div className="font-18 mt-10 font-normal text-tertiary">
+                  아직 저장한 질문이 없어요!
+                </div>
+              </div>
+            ) : null}
             <ul className="flex h-full flex-col gap-8">
               {filteredQuestions.map((question) => (
                 <QuestionItem
