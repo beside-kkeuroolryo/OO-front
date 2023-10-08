@@ -20,7 +20,10 @@ const borderRadius = Array(51)
 module.exports = {
   content: ['./src/**/*.{js,ts,jsx,tsx}'],
   theme: {
-    spacing,
+    spacing: {
+      ...spacing,
+      default: 'var(--padding)',
+    },
     borderRadius,
     fontSize: {
       13: '1.3rem',
@@ -34,6 +37,9 @@ module.exports = {
       24: '2.4rem',
     },
     extend: {
+      maxWidth: {
+        mobile: 'var(--max-width)',
+      },
       fontFamily: {
         sans: ['Pretendard', ...defaultTheme.sans],
       },

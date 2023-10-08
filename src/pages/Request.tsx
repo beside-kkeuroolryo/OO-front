@@ -40,7 +40,7 @@ export default function Request() {
   };
 
   return (
-    <main className="px-24 text-primary">
+    <main className="px-default text-primary">
       <Navbar isRequest={true} />
       <form
         onSubmit={handleSubmit}

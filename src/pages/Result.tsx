@@ -113,7 +113,7 @@ export default function Result() {
   return (
     <main className="h-full bg-dark text-primary">
       <section aria-labelledby="finish" className="rounded-b-28 bg-white">
-        <Navbar isResult className="px-24" />
+        <Navbar isResult className="px-default" />
         <div className="flex flex-col items-center gap-32 bg-[url('../assets/images/finish.svg')] bg-cover bg-top bg-no-repeat pb-[2.63rem] pt-12">
           <div className="flex flex-col gap-8">
             <h1 id="finish" className="font-22 mx-auto font-bold">
@@ -148,7 +148,7 @@ export default function Result() {
       </section>
       <section
         aria-label="게임 결과"
-        className="font-16 break-keep bg-dark px-24 py-16 font-medium"
+        className="font-16 break-keep bg-dark px-default py-16 font-medium"
       >
         <ul className="flex flex-col gap-10">
           {result.length > 0 &&

@@ -11,6 +11,7 @@ import SpinnerIcon from '@/components/common/SpinnerIcon';
 import useInput from '@/hooks/useInput';
 import { useGetQuestion, useGetQuestionIds } from '@/api/questions';
 import { QUESTIONS_COUNT } from '@/constants/questions';
+import { SavedQuestionType } from '@/types/questions';
 
 type Choice = '' | 'a' | 'b';
 
@@ -46,6 +47,14 @@ export default function Questions() {
   const isLastQuestion = index === QUESTIONS_COUNT - 1;
 
   const isError = isIdsError || isQuestionError;
+
+  const questionToSave: SavedQuestionType = {
+    id: question?.id || 0,
+    category: category || '',
+    content: question?.content || '',
+    optionA: question?.choiceA || '',
+    optionB: question?.choiceB || '',
+  };
 
   const init = () => {
     setChoice('');
@@ -85,8 +94,11 @@ export default function Questions() {
   return (
     <>
       <main className="h-full bg-dark text-primary">
-        <section aria-labelledby="question" className="bg-red rounded-b-28 bg-white px-24 pb-24">
-          <Navbar question={question?.content} isQuestion />
+        <section
+          aria-labelledby="question"
+          className="bg-red rounded-b-28 bg-white px-default pb-24"
+        >
+          <Navbar questionToSave={questionToSave} isQuestion />
           <ProgressBar index={index} />
           <div className="flex flex-col gap-24">
             <div className="mt-16 flex w-full flex-col items-center gap-8">
