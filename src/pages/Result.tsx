@@ -103,9 +103,13 @@ export default function Result() {
 
   useEffect(() => {
     if (resultToPost) {
-      mutate(resultToPost, { onError: () => toast.error('결과 전송에 실패했습니다.') });
+      mutate(resultToPost, {
+        onSuccess: () =>
+          navigate(location.pathname, { state: { ids: idsState, resultToRender }, replace: true }),
+        onError: () => toast.error('결과 전송에 실패했습니다.'),
+      });
     }
-  }, [resultToPost, mutate]);
+  }, [resultToPost, idsState, resultToRender, mutate, navigate]);
 
   useEffect(() => {
     if (category === USERMADE && !isToasted.current) {
