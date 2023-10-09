@@ -30,8 +30,9 @@ export default function Questions() {
   const comment = useInput('');
   const [index, setIndex] = useState(0);
   const [choice, setChoice] = useState<Choice>('');
-  const [result, setResult] = useState<Result>([]);
-  const [queryResult, setQueryResult] = useState<QueryResult>([]);
+  const [resultToPost, setResultToPost] = useState<Result>([]);
+  const [resultToRender, setResultToRender] = useState<QueryResult>([]);
+
   const { data: ids, isError: isIdsError } = useGetQuestionIds(category, !idsState);
 
   const currentId = idsState ? idsState?.[index] : ids?.[index];
@@ -67,11 +68,11 @@ export default function Questions() {
   };
 
   const handleClickNext = () => {
-    setQueryResult((prev) => {
+    setResultToRender((prev) => {
       const choice = isChosenA ? question?.choiceA : question?.choiceB;
       return [...prev, [question?.content, choice]];
     });
-    setResult((prev) => [...prev, { questionId: currentId, choice }]);
+    setResultToPost((prev) => [...prev, { questionId: currentId, choice }]);
     setIndex((prev) => (isLastQuestion ? prev : prev + 1));
     init();
   };
@@ -79,13 +80,13 @@ export default function Questions() {
   useEffect(() => {
     if (
       isLastQuestion &&
-      queryResult.length === QUESTIONS_COUNT &&
-      result.length === QUESTIONS_COUNT
+      resultToRender.length === QUESTIONS_COUNT &&
+      resultToPost.length === QUESTIONS_COUNT
     )
       navigate(`/questions/result?category=${category}`, {
-        state: { ids: idsState ? idsState : ids, result, queryResult },
+        state: { ids: idsState ? idsState : ids, resultToPost, resultToRender },
       });
-  }, [idsState, ids, result, queryResult, isLastQuestion, category, navigate]);
+  }, [idsState, ids, resultToPost, resultToRender, isLastQuestion, category, navigate]);
 
   useEffect(() => {
     if (isError) toast.error('질문을 불러오지 못했습니다.');

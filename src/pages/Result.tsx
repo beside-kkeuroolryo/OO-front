@@ -22,13 +22,17 @@ export default function Result() {
   const isToasted = useRef(false);
   const { mutate } = usePostResult();
 
-  const [idsState, resultData, resultQueryState] = [state?.ids, state?.result, state?.queryResult];
+  const [idsState, resultToPost, resultToRender] = [
+    state?.ids,
+    state?.resultToPost,
+    state?.resultToRender,
+  ];
   const resultQueryString = searchParams.get('r');
   const idsQueryString = searchParams.get('i');
   const category = searchParams.get('category');
 
-  const result: string[][] = resultQueryState
-    ? resultQueryState
+  const result: string[][] = resultToRender
+    ? resultToRender
     : JSON.parse(resultQueryString || '[]');
 
   const ids = idsState ? idsState : JSON.parse(idsQueryString || '[]');
@@ -91,17 +95,17 @@ export default function Result() {
     const generateUrl = () => {
       const query = new URLSearchParams();
       query.append('i', JSON.stringify(ids));
-      query.append('r', JSON.stringify(resultQueryState));
+      query.append('r', JSON.stringify(resultToRender));
       setShareUrl(`${window.location.href}&${query.toString()}`);
     };
     generateUrl();
-  }, [ids, resultQueryState]);
+  }, [ids, resultToRender]);
 
   useEffect(() => {
-    if (resultData) {
-      mutate(resultData, { onError: () => toast.error('결과 전송에 실패했습니다.') });
+    if (resultToPost) {
+      mutate(resultToPost, { onError: () => toast.error('결과 전송에 실패했습니다.') });
     }
-  }, [resultData, mutate]);
+  }, [resultToPost, mutate]);
 
   useEffect(() => {
     if (category === USERMADE && !isToasted.current) {
