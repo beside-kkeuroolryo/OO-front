@@ -34,8 +34,8 @@ export const useGetComments = (questionId?: number, enabled?: boolean) => {
         `/api/golrabas/${questionId}/comments${pageParam ? `?searchAfterId=${pageParam}` : ''}`,
       );
 
-      const { last, size, nextId } = data.data.page;
-      const lastId = size + nextId - 1;
+      const { last, nextId } = data.data.page;
+      const lastId = nextId - 1;
       return { comments: data.data.comments, isLast: last, lastId };
     },
     {
