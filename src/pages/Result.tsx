@@ -29,9 +29,9 @@ export default function Result() {
 
   const result: string[][] = resultQueryState
     ? resultQueryState
-    : JSON.parse(resultQueryString ? resultQueryString : '[]');
+    : JSON.parse(resultQueryString || '[]');
 
-  const ids = idsState ? idsState : JSON.parse(idsQueryString ? idsQueryString : '[]');
+  const ids = idsState ? idsState : JSON.parse(idsQueryString || '[]');
 
   const share = (data: ShareData) => {
     try {
