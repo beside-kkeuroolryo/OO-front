@@ -36,7 +36,7 @@ export const useGetQuestionIds = (category?: string, enabled?: boolean) => {
     [category, 'ids'],
     async () => {
       const { data } = await axiosInstance.get<GetQuestionIdsResponse>(
-        `/api/golrabas/category/${category}`,
+        `/api/golrabas/category/${category?.toUpperCase()}`,
       );
       return data.data.questionIds;
     },
