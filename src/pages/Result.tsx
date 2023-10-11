@@ -107,7 +107,6 @@ export default function Result() {
       isToasted.current = true;
     }
   }, [category, customToast]);
-  console.log(ids);
 
   return (
     <main className="h-full bg-dark text-primary">
