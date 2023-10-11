@@ -9,18 +9,20 @@ import Comments from '@/components/Questions/Comments';
 import CommentForm from '@/components/Questions/CommentForm';
 import SpinnerIcon from '@/components/common/SpinnerIcon';
 import useInput from '@/hooks/useInput';
+import useLockBodyScroll from '@/hooks/useLockBodyScroll';
 import { useGetQuestion, useGetQuestionIds } from '@/api/questions';
 import { QUESTIONS_COUNT } from '@/constants/questions';
 import { SavedQuestionType } from '@/types/questions';
+import { usePostConvertToShortUrl } from '@/api/shortUrl';
 
 type Choice = '' | 'a' | 'b';
 
-type Result = {
+export type ResultToPost = {
   questionId?: number;
   choice?: Choice;
 }[];
 
-type QueryResult = (string | (string | undefined)[])[];
+export type ResultToRender = (string | undefined)[][];
 
 export default function Questions() {
   const navigate = useNavigate();
@@ -30,8 +32,11 @@ export default function Questions() {
   const comment = useInput('');
   const [index, setIndex] = useState(0);
   const [choice, setChoice] = useState<Choice>('');
-  const [resultToPost, setResultToPost] = useState<Result>([]);
-  const [resultToRender, setResultToRender] = useState<QueryResult>([]);
+  const [resultToPost, setResultToPost] = useState<ResultToPost>([]);
+  const [resultToRender, setResultToRender] = useState<ResultToRender>([]);
+
+  const { mutate, isLoading } = usePostConvertToShortUrl();
+  useLockBodyScroll(isLoading);
 
   const { data: ids, isError: isIdsError } = useGetQuestionIds(category, !idsState);
 
@@ -82,18 +87,30 @@ export default function Questions() {
       isLastQuestion &&
       resultToRender.length === QUESTIONS_COUNT &&
       resultToPost.length === QUESTIONS_COUNT
-    )
-      navigate(`/questions/result?category=${category}`, {
-        state: { ids: idsState ? idsState : ids, resultToPost, resultToRender },
+    ) {
+      const dataToShare = JSON.stringify({ ids: ids || idsState, result: resultToRender });
+      mutate(dataToShare, {
+        onSuccess: (shortUrl) => {
+          navigate(`/result/${shortUrl}`, {
+            state: { ids: ids || idsState, resultToPost, resultToRender, category },
+          });
+        },
       });
-  }, [idsState, ids, resultToPost, resultToRender, isLastQuestion, category, navigate]);
+    }
+  }, [idsState, ids, resultToPost, resultToRender, isLastQuestion, category, navigate, mutate]);
 
   useEffect(() => {
     if (isError) toast.error('질문을 불러오지 못했습니다.');
   }, [isError]);
+  console.log(resultToRender);
 
   return (
     <>
+      {isLoading && (
+        <div className="absolute left-0 top-0 z-10 flex h-screen w-full items-center justify-center bg-black bg-opacity-25">
+          <SpinnerIcon width={60} height={60} className="text-teal-200" />
+        </div>
+      )}
       <main className="h-full bg-dark text-primary">
         <section
           aria-labelledby="question"

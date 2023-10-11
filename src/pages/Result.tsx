@@ -1,41 +1,41 @@
 import { useEffect, useRef, useState } from 'react';
-import { useLocation, useNavigate, useSearchParams } from 'react-router-dom';
+import { useLocation, useNavigate, useParams } from 'react-router-dom';
 import { toast } from 'react-toastify';
+import { ResultToPost, ResultToRender } from '@/pages/Questions';
 import Navbar from '@/components/common/Navbar';
 import Card from '@/components/Result/Card';
+import useCustomToast from '@/hooks/useCustomToast';
+import useSharedData from '@/hooks/useSharedData';
+import { USERMADE } from '@/constants/questions';
+import { usePostResult } from '@/api/questions';
 import { ReactComponent as Home } from '@/assets/icons/home.svg';
 import { ReactComponent as Share } from '@/assets/icons/share.svg';
 import { ReactComponent as Retry } from '@/assets/icons/retry.svg';
-import useCustomToast from '@/hooks/useCustomToast';
-import { USERMADE } from '@/constants/questions';
-import { usePostResult } from '@/api/questions';
 
 type ButtonsTuple = [React.FC<React.SVGProps<SVGSVGElement>>, string, () => void];
 
 export default function Result() {
   const navigate = useNavigate();
   const { state } = useLocation();
-  const [searchParams] = useSearchParams();
-  const [shareUrl, setShareUrl] = useState('');
+  const { shortUrl } = useParams();
 
   const customToast = useCustomToast();
   const isToasted = useRef(false);
-  const { mutate } = usePostResult();
 
-  const [idsState, resultToPost, resultToRender] = [
+  const { mutate } = usePostResult();
+  const { sharedIds, sharedResult } = useSharedData(shortUrl || '', !!state?.resultToRender);
+
+  const [idsState, resultToPost, resultToRender]: [number[], ResultToPost, ResultToRender] = [
     state?.ids,
     state?.resultToPost,
     state?.resultToRender,
   ];
-  const resultQueryString = searchParams.get('r');
-  const idsQueryString = searchParams.get('i');
-  const category = searchParams.get('category');
 
-  const result: string[][] = resultToRender
-    ? resultToRender
-    : JSON.parse(resultQueryString || '[]');
+  const category = state?.category;
+  const result = resultToRender ? resultToRender : sharedResult;
+  const ids = idsState ? idsState : sharedIds;
 
-  const ids = idsState ? idsState : JSON.parse(idsQueryString || '[]');
+  const shareUrl = window.location.origin + `/result/${shortUrl}`;
 
   const share = (data: ShareData) => {
     try {
@@ -76,7 +76,7 @@ export default function Result() {
   };
 
   const handleRetry = () => {
-    navigate(`/questions/${category}`, { state: idsState });
+    navigate(`/retry`, { state: idsState });
   };
 
   const handleShare = async () => {
@@ -90,16 +90,6 @@ export default function Result() {
     }
     return copy();
   };
-
-  useEffect(() => {
-    const generateUrl = () => {
-      const query = new URLSearchParams();
-      query.append('i', JSON.stringify(ids));
-      query.append('r', JSON.stringify(resultToRender));
-      setShareUrl(`${window.location.href}&${query.toString()}`);
-    };
-    generateUrl();
-  }, [ids, resultToRender]);
 
   useEffect(() => {
     if (resultToPost) {
@@ -117,6 +107,7 @@ export default function Result() {
       isToasted.current = true;
     }
   }, [category, customToast]);
+  console.log(ids);
 
   return (
     <main className="h-full bg-dark text-primary">
@@ -160,9 +151,10 @@ export default function Result() {
       >
         <ul className="flex flex-col gap-10">
           {result.length > 0 &&
-            result?.map(([question, choice], index) => (
-              <Card key={ids[index]} question={question} choice={choice} />
-            ))}
+            result?.map(
+              ([question, choice], index) =>
+                question && choice && <Card key={ids[index]} question={question} choice={choice} />,
+            )}
         </ul>
       </section>
     </main>
