@@ -21,7 +21,7 @@ export default function Request() {
     event.preventDefault();
     if (content.length < 1 || choiceA.value.length < 1 || choiceB.value.length < 1) return;
     mutate(
-      { content, choiceA: choiceA.value, choiceB: choiceB.value },
+      { content, choiceA: choiceA.value, choiceB: choiceB.value, category: 'USERMADE' },
       {
         onSuccess: () => {
           customToast.requestSuccess();

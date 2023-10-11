@@ -13,6 +13,7 @@ type PostQuesetionBody = {
   content: string;
   choiceA: string;
   choiceB: string;
+  category: 'USERMADE';
 };
 
 type GetQuestionIdsResponse = {
