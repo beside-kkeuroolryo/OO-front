@@ -1,4 +1,4 @@
-import { useEffect, useState } from 'react';
+import { useCallback, useEffect, useState } from 'react';
 import { useLocation, useNavigate } from 'react-router-dom';
 import { toast } from 'react-toastify';
 import ProgressBar from '@/components/Questions/ProgressBar';
@@ -62,17 +62,40 @@ export default function Questions() {
     optionB: question?.choiceB || '',
   };
 
-  const init = () => {
+  const init = useCallback(() => {
     setChoice('');
     comment.onClear();
-  };
+  }, [comment]);
 
   const handleChoose = (event: React.MouseEvent<HTMLButtonElement>) => {
     if (isLoadingQuestion || isError) return;
     setChoice(event.currentTarget.id as Choice);
   };
 
+  const convertToShortUrl = useCallback(() => {
+    const dataToShare = JSON.stringify({ ids: ids || idsState, result: resultToRender });
+    mutate(dataToShare, {
+      onSuccess: (shortUrl) => {
+        navigate(`/result/${shortUrl}`, {
+          state: { ids: ids || idsState, resultToPost, resultToRender, category },
+        });
+      },
+      onError: () => {
+        toast.error('요청 처리 중 문제가 발생했습니다.');
+        init();
+      },
+    });
+  }, [category, ids, idsState, resultToPost, resultToRender, mutate, navigate, init]);
+
   const handleClickNext = () => {
+    if (
+      isLastQuestion &&
+      resultToRender.length === QUESTIONS_COUNT &&
+      resultToPost.length === QUESTIONS_COUNT
+    ) {
+      return convertToShortUrl();
+    }
+
     setResultToRender((prev) => {
       const choice = isChosenA ? question?.choiceA : question?.choiceB;
       return [...prev, [question?.content, choice]];
@@ -83,26 +106,8 @@ export default function Questions() {
   };
 
   useEffect(() => {
-    if (
-      isLastQuestion &&
-      resultToRender.length === QUESTIONS_COUNT &&
-      resultToPost.length === QUESTIONS_COUNT
-    ) {
-      const dataToShare = JSON.stringify({ ids: ids || idsState, result: resultToRender });
-      mutate(dataToShare, {
-        onSuccess: (shortUrl) => {
-          navigate(`/result/${shortUrl}`, {
-            state: { ids: ids || idsState, resultToPost, resultToRender, category },
-          });
-        },
-      });
-    }
-  }, [idsState, ids, resultToPost, resultToRender, isLastQuestion, category, navigate, mutate]);
-
-  useEffect(() => {
     if (isError) toast.error('질문을 불러오지 못했습니다.');
   }, [isError]);
-  console.log(resultToRender);
 
   return (
     <>
