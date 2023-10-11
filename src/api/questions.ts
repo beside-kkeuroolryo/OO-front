@@ -13,6 +13,7 @@ type PostQuesetionBody = {
   content: string;
   choiceA: string;
   choiceB: string;
+  category: 'USERMADE';
 };
 
 type GetQuestionIdsResponse = {
@@ -48,7 +49,7 @@ export const useGetQuestion = (id?: number) => {
   return useQuery<QuestionType, AxiosError>(
     ['question', id],
     async () => {
-      const { data } = await axiosInstance.get<GetQuestionResponse>(`/api/golrabas/${id}`);
+      const { data } = await axiosInstance.get<GetQuestionResponse>(`/api/golrabas/question/${id}`);
       return data.data;
     },
     { enabled: id !== undefined },
