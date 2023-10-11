@@ -65,7 +65,7 @@ export default function Questions() {
   const init = useCallback(() => {
     setChoice('');
     comment.onClear();
-  }, [comment]);
+  }, [comment.onClear]);
 
   const handleChoose = (event: React.MouseEvent<HTMLButtonElement>) => {
     if (isLoadingQuestion || isError) return;
@@ -97,13 +97,26 @@ export default function Questions() {
     }
 
     setResultToRender((prev) => {
+      if (prev.length === QUESTIONS_COUNT) return prev;
       const choice = isChosenA ? question?.choiceA : question?.choiceB;
       return [...prev, [question?.content, choice]];
     });
-    setResultToPost((prev) => [...prev, { questionId: currentId, choice }]);
+    setResultToPost((prev) =>
+      prev.length === QUESTIONS_COUNT ? prev : [...prev, { questionId: currentId, choice }],
+    );
     setIndex((prev) => (isLastQuestion ? prev : prev + 1));
     init();
   };
+
+  useEffect(() => {
+    if (
+      isLastQuestion &&
+      resultToRender.length === QUESTIONS_COUNT &&
+      resultToPost.length === QUESTIONS_COUNT
+    ) {
+      convertToShortUrl();
+    }
+  }, [isLastQuestion, resultToPost.length, resultToRender.length, convertToShortUrl]);
 
   useEffect(() => {
     if (isError) toast.error('질문을 불러오지 못했습니다.');
