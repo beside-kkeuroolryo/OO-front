@@ -1,10 +1,11 @@
 import { Link, useNavigate } from 'react-router-dom';
+import NavIconLink from '@/components/common/NavIconLink';
+import useQuestionsLocalStorage from '@/hooks/useQuestionsLocalStorage';
+import { SavedQuestionType } from '@/types/questions';
 import { ReactComponent as Logo } from '@/assets/icons/logo.svg';
 import { ReactComponent as Back } from '@/assets/icons/back.svg';
 import { ReactComponent as Star } from '@/assets/icons/star.svg';
 import { ReactComponent as Home } from '@/assets/icons/home.svg';
-import NavIconLink from '@/components/common/NavIconLink';
-import useLocalStorage from '@/hooks/useLocalStorage';
 
 type NavbarProps = {
   isHome?: boolean;
@@ -12,7 +13,7 @@ type NavbarProps = {
   isResult?: boolean;
   isMy?: boolean;
   isRequest?: boolean;
-  question?: string;
+  questionToSave?: SavedQuestionType;
   className?: string;
 };
 
@@ -22,11 +23,13 @@ export default function Navbar({
   isResult,
   isMy,
   isRequest,
-  question,
-  className = isResult ? 'flex-row-reverse' : '',
+  questionToSave,
+  className = '',
 }: NavbarProps) {
+  className = isResult ? `flex-row-reverse ${className}` : className;
+
   const navigate = useNavigate();
-  const [questions, setQuestions] = useLocalStorage('questions', []);
+  const [questions, setQuestions] = useQuestionsLocalStorage();
 
   const handlGoBack = (event: React.MouseEvent) => {
     event.preventDefault();
@@ -34,52 +37,83 @@ export default function Navbar({
   };
 
   const handleSave = () => {
-    setQuestions((prev: string[]) => {
-      if (question) {
-        if (prev.includes(question)) {
-          prev = prev.filter((value) => value !== question);
-        } else {
-          prev = [...prev, question];
-        }
+    if (!questionToSave) return;
+
+    setQuestions((prev) => {
+      if (prev.some((savedQuestion) => savedQuestion.id === questionToSave.id)) {
+        prev = prev.filter((savedQuestion) => savedQuestion.id !== questionToSave.id);
+      } else {
+        prev = [...prev, questionToSave];
       }
       return prev;
     });
   };
 
   return (
-    <nav className={`relative flex items-center justify-between pb-6 pt-18 ${className}`}>
+    <nav className={`flex items-center justify-between pb-10 pt-12 ${className}`}>
       {isHome && (
         <>
-          <Link to="/">
-            <Logo aria-label="로고" />
+          <Link to="/" aria-label="골라바 홈">
+            <Logo aria-hidden={true} />
           </Link>
-          <NavIconLink to="/my" Icon={<Star aria-label="보관함" />} />
+          <NavIconLink
+            to="/my"
+            aria-label="보관함"
+            className="text-cyan"
+            Icon={<Star aria-hidden={true} />}
+          />
         </>
       )}
       {isQuestion && (
         <>
-          <NavIconLink to="/" Icon={<Home aria-label="홈" />} />
-          <button type="button" onClick={handleSave}>
+          <NavIconLink
+            to="/"
+            aria-label="홈"
+            Icon={<Home aria-hidden={true} className="text-dark" />}
+          />
+          <button
+            type="button"
+            aria-label="저장"
+            onClick={handleSave}
+            disabled={!questionToSave?.content}
+          >
             <Star
-              aria-label="저장"
-              className={`${questions.includes(question) ? 'text-dark' : 'text-tertiary'}`}
+              aria-hidden={true}
+              className={`${
+                questions.some((question) => question.id === questionToSave?.id)
+                  ? 'text-dark'
+                  : 'text-tertiary'
+              }`}
             />
           </button>
         </>
       )}
       {isResult && (
-        <NavIconLink to="/my" className="text-dark" Icon={<Star aria-label="보관함" />} />
+        <NavIconLink
+          to="/my"
+          aria-label="보관함"
+          className="text-dark"
+          Icon={<Star aria-hidden={true} />}
+        />
       )}
       {isMy && (
         <>
-          <NavIconLink onClick={handlGoBack} Icon={<Back aria-label="뒤로가기" />} />
-          <div className="font-18 center font-semibold text-header">보관함</div>
+          <NavIconLink
+            aria-label="뒤로가기"
+            Icon={<Back aria-hidden={true} />}
+            onClick={handlGoBack}
+          />
+          <h1 className="font-18 center font-semibold text-header">보관함</h1>
         </>
       )}
       {isRequest && (
         <>
-          <NavIconLink onClick={handlGoBack} Icon={<Back aria-label="뒤로가기" />} />
-          <div className="font-18 center font-medium text-header">골라바 만들기</div>
+          <NavIconLink
+            aria-label="뒤로가기"
+            Icon={<Back aria-hidden={true} />}
+            onClick={handlGoBack}
+          />
+          <h1 className="font-18 center font-medium text-header">밸런스 게임 만들기</h1>
         </>
       )}
     </nav>

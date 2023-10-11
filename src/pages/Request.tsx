@@ -21,7 +21,7 @@ export default function Request() {
     event.preventDefault();
     if (content.length < 1 || choiceA.value.length < 1 || choiceB.value.length < 1) return;
     mutate(
-      { content, choiceA: choiceA.value, choiceB: choiceB.value },
+      { content, choiceA: choiceA.value, choiceB: choiceB.value, category: 'USERMADE' },
       {
         onSuccess: () => {
           customToast.requestSuccess();
@@ -40,7 +40,7 @@ export default function Request() {
   };
 
   return (
-    <main className="px-24 text-primary">
+    <main className="px-default text-primary">
       <Navbar isRequest={true} />
       <form
         onSubmit={handleSubmit}

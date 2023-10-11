@@ -10,9 +10,9 @@ export default function CategoryLink({ children, to = '/', className }: Category
   return (
     <Link
       to={to}
-      className={`font-20 flex justify-center rounded-12 bg-dark py-36 font-semibold ${className}`}
+      className={`flex w-full items-center justify-between rounded-12 bg-white px-20 py-12 ${className}`}
     >
-      <div>{children}</div>
+      {children}
     </Link>
   );
 }

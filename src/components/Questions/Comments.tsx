@@ -37,9 +37,12 @@ export default function Comments({ questionId }: CommentsProps) {
   return (
     <>
       <section
-        aria-label="comments"
-        className="flex flex-col gap-8 overflow-scroll bg-dark px-24 pb-60 pt-16"
+        aria-labelledby="comments"
+        className="flex flex-col gap-8 bg-dark px-default pb-60 pt-16"
       >
+        <h2 id="comments" className="a11y-hidden">
+          댓글 리스트
+        </h2>
         {isLoading ? <SpinnerIcon width={30} height={30} className="mx-auto text-white" /> : null}
         {comments?.length === 0 ? (
           <div className="font-16 flex h-full items-center justify-center text-white">
@@ -50,8 +53,15 @@ export default function Comments({ questionId }: CommentsProps) {
           <article key={id} className="flex flex-col gap-6 rounded-12 bg-white p-16">
             <div className="flex justify-between">
               <div className="font-13 font-semibold">{username}</div>
-              <button type="button" data-id={id} className="widen" onClick={handleClickMore}>
-                <More role="img" aria-label="더보기" />
+              <button
+                aria-label="댓글 삭제 모달 열기"
+                aria-haspopup="dialog"
+                type="button"
+                data-id={id}
+                className="widen"
+                onClick={handleClickMore}
+              >
+                <More aria-hidden={true} />
               </button>
             </div>
             <p className="font-15 font-medium">{content}</p>

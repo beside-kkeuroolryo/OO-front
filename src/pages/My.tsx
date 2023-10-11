@@ -1,24 +1,40 @@
 import { useCallback, useState } from 'react';
 import Navbar from '@/components/common/Navbar';
 import Button from '@/components/common/Button';
-import useLocalStorage from '@/hooks/useLocalStorage';
-import { ReactComponent as Check } from '@/assets/icons/check.svg';
 import ConfirmDeleteModal from '@/components/My/ConfirmDeleteModal';
+import QuestionItem from '@/components/My/QuestionItem';
+import useQuestionsLocalStorage from '@/hooks/useQuestionsLocalStorage';
+import { categoryKeys, CategoryKeys } from '@/constants/categories';
+import { ReactComponent as Blue } from '@/assets/images/blue.svg';
+
+const categories = ['ALL', '셀프', '커플', '우정', '랜덤', '같이해요'] as const;
+type CategoryType = (typeof categories)[number];
+
+const categoryMap = {
+  ALL: 'all',
+  ...Object.fromEntries(
+    categories.slice(1).map((category, index) => [category, categoryKeys[index]]),
+  ),
+} as Record<CategoryType, 'all' | CategoryKeys>;
 
 export default function My() {
-  const [questions, setQuestions] = useLocalStorage('questions', ['a', 'b']);
-  const [selectedIndexes, setSelectedIndexes] = useState<string[]>([]);
+  const [questions, setQuestions] = useQuestionsLocalStorage();
+  const [selectedIds, setSelectedIds] = useState<number[]>([]);
+  const [selectedCategory, setSelectedCategory] = useState<CategoryType>('ALL');
   const [isOpen, setIsOpen] = useState(false);
+  const filteredQuestions =
+    selectedCategory === 'ALL'
+      ? questions
+      : questions.filter((question) => question.category === categoryMap[selectedCategory]);
 
-  const handleToggleCheckbox = (event: React.MouseEvent<SVGSVGElement>) => {
-    const target = event.currentTarget as SVGSVGElement;
-    const { id } = target;
+  const handleClickCategory = (category: CategoryType) => setSelectedCategory(category);
 
-    setSelectedIndexes((prev) => {
-      if (prev.includes(id)) {
-        prev = prev.filter((value) => value !== id);
+  const handleToggleCheckbox = (questionId: number) => {
+    setSelectedIds((prev) => {
+      if (prev.includes(questionId)) {
+        prev = prev.filter((value) => value !== questionId);
       } else {
-        prev = [...prev, id];
+        prev = [...prev, questionId];
       }
       return prev;
     });
@@ -26,9 +42,8 @@ export default function My() {
 
   const handleDelete = (event: React.FormEvent<HTMLFormElement>) => {
     event.preventDefault();
-    setQuestions(
-      questions.filter((_: string, index: string) => !selectedIndexes.includes(String(index))),
-    );
+    setQuestions((prev) => prev.filter((question) => !selectedIds.includes(question.id)));
+    setSelectedIds([]);
     handleCloseModal();
   };
 
@@ -42,32 +57,68 @@ export default function My() {
 
   return (
     <>
-      <main className="mb-100 flex w-full flex-col gap-16 px-24">
-        <Navbar isMy={true} />
-        <ul className="flex h-full flex-col gap-8">
-          {questions.map((question: string, index: number) => (
-            <li className="font-16 flex items-center justify-between gap-16 break-all rounded-12 bg-background p-16 font-medium">
-              {question}
-              <Check
-                id={String(index)}
-                role="checkbox"
-                aria-checked={selectedIndexes.includes(String(index))}
-                className={`widen cursor-pointer ${
-                  selectedIndexes.includes(String(index)) ? 'text-dark' : 'text-tertiary'
-                }`}
-                onClick={handleToggleCheckbox}
-              />
-            </li>
-          ))}
-        </ul>
-        <Button
-          onClick={handleOpenModal}
-          style={{ width: '88%', left: '6%' }}
-          className="font-18 fixed bottom-34 left-[6.5%] py-[1.9rem] font-semibold"
-          disabled={selectedIndexes.length === 0}
-        >
-          삭제하기
-        </Button>
+      <main className="flex h-full w-full flex-col bg-dark pt-46">
+        <Navbar isMy={true} className="fixed top-0 z-10 w-full max-w-mobile bg-white px-default" />
+        <div className="bg-dark px-default pb-[12.2rem]">
+          <section aria-labelledby="category" className="pb-38 pt-30">
+            <h2 id="category" className="a11y-hidden">
+              카테고리
+            </h2>
+            <div className="flex flex-wrap gap-8">
+              {categories.map((category) => (
+                <button
+                  key={category}
+                  type="button"
+                  className={`font-14 rounded-[1rem] px-18 py-10 font-semibold ${
+                    category === selectedCategory ? 'bg-cyan text-dark' : 'bg-primary text-tertiary'
+                  }`}
+                  onClick={() => handleClickCategory(category)}
+                >
+                  {category}
+                </button>
+              ))}
+            </div>
+          </section>
+          <section aria-labelledby="list">
+            <h2 id="list" className="a11y-hidden">
+              저장한 질문 리스트
+            </h2>
+
+            {filteredQuestions.length > 0 && (
+              <div className="font-14 mb-10 font-semibold text-white">
+                {filteredQuestions.length}개의 질문
+              </div>
+            )}
+
+            {filteredQuestions.length === 0 ? (
+              <div className="mt-112 flex flex-col items-center">
+                <Blue aria-hidden={true} />
+                <div className="font-18 mt-10 font-normal text-tertiary">
+                  아직 저장한 질문이 없어요!
+                </div>
+              </div>
+            ) : null}
+            <ul className="flex h-full flex-col gap-8">
+              {filteredQuestions.map((question) => (
+                <QuestionItem
+                  key={question.id}
+                  question={question}
+                  handleCheck={() => handleToggleCheckbox(question.id)}
+                  isChecked={selectedIds.includes(question.id)}
+                />
+              ))}
+            </ul>
+          </section>
+        </div>
+        <div className="fixed bottom-0 w-full max-w-mobile bg-white px-default py-24">
+          <Button
+            className="font-18 w-full max-w-[calc(var(--max-width)-2*var(--padding))] py-[1.9rem] font-semibold"
+            disabled={selectedIds.length === 0}
+            onClick={handleOpenModal}
+          >
+            {selectedIds.length === 0 ? '삭제하기' : `${selectedIds.length}개의 질문 삭제하기`}
+          </Button>
+        </div>
       </main>
       <ConfirmDeleteModal
         isOpen={isOpen}

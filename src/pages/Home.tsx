@@ -1,44 +1,39 @@
 import { Link } from 'react-router-dom';
 import CategoryLink from '@/components/Home/CategoryLink';
 import Navbar from '@/components/common/Navbar';
-import { ReactComponent as Next } from '@/assets/icons/next.svg';
-
-const bgConfig = 'bg-[url(@/assets/images/home.png)]';
+import { ReactComponent as Memo } from '@/assets/icons/memo.svg';
+import { CATEGORIES, categoryKeys } from '@/constants/categories';
 
 export default function Home() {
   return (
-    <div className="h-full text-white">
-      <header className={`h-[39rem] w-full rounded-b-[2.8rem] bg-dark bg-center px-24 ${bgConfig}`}>
+    <div className="h-full bg-dark">
+      <header className={`w-full bg-dark bg-center px-default text-white`}>
         <Navbar isHome={true} />
-        <h1 className="font-24 mb-8 mt-18 font-bold">
+        <h1 className="font-24 mb-8 mt-20 font-bold">
           <span className="text-cyan">골라바</span>에서 <span className="text-cyan">골라바!</span>
           <br /> 어떤 선택을 하실건가요?
         </h1>
         <div className="font-16 font-semibold text-tertiary">골라바 게임을 시작해 보세요. 😎</div>
       </header>
-      <main className="flex flex-col gap-16 px-24 py-24">
-        <div className="flex gap-16">
-          <CategoryLink to="/questions/self" className="w-1/2">
-            셀프
-          </CategoryLink>
-          <CategoryLink to="/questions/couple" className="w-1/2">
-            커플
-          </CategoryLink>
-        </div>
-        <div className="flex gap-16">
-          <CategoryLink to="/questions/friend" className="w-1/2">
-            친구
-          </CategoryLink>
-          <CategoryLink to="/questions/random" className="w-1/2">
-            랜덤
-          </CategoryLink>
-        </div>
-        <CategoryLink to="/questions/usermade">골라바에 도착한 질문 모음</CategoryLink>
+      <main className="flex flex-col items-center gap-16 bg-dark px-default pb-[2.7rem] pt-30 text-dark">
+        {categoryKeys.map((category) => {
+          const { title, sub, img } = CATEGORIES[category];
+          return (
+            <CategoryLink key={title} to={`/questions/${category}`}>
+              <div className="flex flex-col gap-4">
+                <div className="font-20 font-semibold">{title}</div>
+                <div className="font-14 font-medium text-primary">{sub}</div>
+              </div>
+              {img}
+            </CategoryLink>
+          );
+        })}
         <Link
           to="/request"
-          className="font-14 flex justify-center gap-8 rounded-50 border border-solid border-placeholder py-14 text-primary"
+          className="font-14 mt-8 flex w-fit justify-center gap-6 rounded-50 border border-solid border-placeholder bg-cyan px-20 py-14 font-semibold text-dark"
         >
-          만들고 싶은 밸런스 질문이 있어요! <Next />
+          <Memo aria-hidden={true} />
+          만들고 싶은 밸런스 게임이 있어요!
         </Link>
       </main>
     </div>

@@ -9,7 +9,7 @@ import 'react-toastify/dist/ReactToastify.css';
 
 function App() {
   return (
-    <div className="mx-auto h-full max-w-[39rem]">
+    <div className="mx-auto h-full max-w-mobile">
       <Routes>
         <Route path="/" element={<Home />} />
         <Route path="request" element={<Request />} />
@@ -20,8 +20,9 @@ function App() {
           <Route path="friend" element={<Questions />} />
           <Route path="random" element={<Questions />} />
           <Route path="usermade" element={<Questions />} />
-          <Route path="result" element={<Result />} />
         </Route>
+        <Route path="retry" element={<Questions />} />
+        <Route path="result/:shortUrl" element={<Result />} />
       </Routes>
       <ToastContainer
         position="bottom-right"

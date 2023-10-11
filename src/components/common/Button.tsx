@@ -20,7 +20,6 @@ export default function Button({
   return (
     <button
       className={`
-        w-fit
         ${rounded ? 'rounded-40' : 'rounded-12'}
         ${ButtonConfig.disabled} ${ButtonConfig[variant]}
         ${className}

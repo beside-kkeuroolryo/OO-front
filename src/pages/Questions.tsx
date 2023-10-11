@@ -1,4 +1,4 @@
-import { useEffect, useState } from 'react';
+import { useCallback, useEffect, useState } from 'react';
 import { useLocation, useNavigate } from 'react-router-dom';
 import { toast } from 'react-toastify';
 import ProgressBar from '@/components/Questions/ProgressBar';
@@ -9,17 +9,20 @@ import Comments from '@/components/Questions/Comments';
 import CommentForm from '@/components/Questions/CommentForm';
 import SpinnerIcon from '@/components/common/SpinnerIcon';
 import useInput from '@/hooks/useInput';
+import useLockBodyScroll from '@/hooks/useLockBodyScroll';
 import { useGetQuestion, useGetQuestionIds } from '@/api/questions';
 import { QUESTIONS_COUNT } from '@/constants/questions';
+import { SavedQuestionType } from '@/types/questions';
+import { usePostConvertToShortUrl } from '@/api/shortUrl';
 
 type Choice = '' | 'a' | 'b';
 
-type Result = {
+export type ResultToPost = {
   questionId?: number;
   choice?: Choice;
 }[];
 
-type QueryResult = (string | (string | undefined)[])[];
+export type ResultToRender = (string | undefined)[][];
 
 export default function Questions() {
   const navigate = useNavigate();
@@ -29,9 +32,13 @@ export default function Questions() {
   const comment = useInput('');
   const [index, setIndex] = useState(0);
   const [choice, setChoice] = useState<Choice>('');
-  const [result, setResult] = useState<Result>([]);
-  const [queryResult, setQueryResult] = useState<QueryResult>([]);
-  const { data: ids, isError: isIdsError } = useGetQuestionIds(category, idsState);
+  const [resultToPost, setResultToPost] = useState<ResultToPost>([]);
+  const [resultToRender, setResultToRender] = useState<ResultToRender>([]);
+
+  const { mutate, isLoading } = usePostConvertToShortUrl();
+  useLockBodyScroll(isLoading);
+
+  const { data: ids, isError: isIdsError } = useGetQuestionIds(category, !idsState);
 
   const currentId = idsState ? idsState?.[index] : ids?.[index];
   const {
@@ -47,52 +54,75 @@ export default function Questions() {
 
   const isError = isIdsError || isQuestionError;
 
-  const init = () => {
+  const questionToSave: SavedQuestionType = {
+    id: question?.id || 0,
+    category: category || '',
+    content: question?.content || '',
+    optionA: question?.choiceA || '',
+    optionB: question?.choiceB || '',
+  };
+
+  const init = useCallback(() => {
     setChoice('');
     comment.onClear();
-  };
+  }, [comment]);
 
   const handleChoose = (event: React.MouseEvent<HTMLButtonElement>) => {
     if (isLoadingQuestion || isError) return;
     setChoice(event.currentTarget.id as Choice);
   };
 
+  const convertToShortUrl = useCallback(() => {
+    const dataToShare = JSON.stringify({ ids: ids || idsState, result: resultToRender });
+    mutate(dataToShare, {
+      onSuccess: (shortUrl) => {
+        navigate(`/result/${shortUrl}`, {
+          state: { ids: ids || idsState, resultToPost, resultToRender, category },
+        });
+      },
+      onError: () => {
+        toast.error('요청 처리 중 문제가 발생했습니다.');
+        init();
+      },
+    });
+  }, [category, ids, idsState, resultToPost, resultToRender, mutate, navigate, init]);
+
   const handleClickNext = () => {
-    setQueryResult((prev) => {
+    if (
+      isLastQuestion &&
+      resultToRender.length === QUESTIONS_COUNT &&
+      resultToPost.length === QUESTIONS_COUNT
+    ) {
+      return convertToShortUrl();
+    }
+
+    setResultToRender((prev) => {
       const choice = isChosenA ? question?.choiceA : question?.choiceB;
       return [...prev, [question?.content, choice]];
     });
-    setResult((prev) => [...prev, { questionId: currentId, choice }]);
+    setResultToPost((prev) => [...prev, { questionId: currentId, choice }]);
     setIndex((prev) => (isLastQuestion ? prev : prev + 1));
     init();
   };
 
   useEffect(() => {
-    if (
-      isLastQuestion &&
-      queryResult.length === QUESTIONS_COUNT &&
-      result.length === QUESTIONS_COUNT
-    )
-      navigate(`/questions/result?category=${category}`, {
-        state: { ids: idsState ? idsState : ids, result, queryResult },
-      });
-  }, [idsState, ids, result, queryResult, isLastQuestion, category, navigate]);
-
-  useEffect(() => {
-    if (isError) toast.error('문제를 불러오지 못했습니다.');
+    if (isError) toast.error('질문을 불러오지 못했습니다.');
   }, [isError]);
 
   return (
     <>
+      {isLoading && (
+        <div className="absolute left-0 top-0 z-10 flex h-screen w-full items-center justify-center bg-black bg-opacity-25">
+          <SpinnerIcon width={60} height={60} className="text-teal-200" />
+        </div>
+      )}
       <main className="h-full bg-dark text-primary">
-        <section aria-labelledby="question" className="bg-red rounded-b-28 bg-white px-24 pb-24">
-          <Navbar question={question?.content} isQuestion />
-          <div className="flex justify-between py-12">
-            <ProgressBar index={index} />
-            <div className="font-14 font-medium text-secondary">
-              {index + 1}/{QUESTIONS_COUNT}
-            </div>
-          </div>
+        <section
+          aria-labelledby="question"
+          className="bg-red rounded-b-28 bg-white px-default pb-24"
+        >
+          <Navbar questionToSave={questionToSave} isQuestion />
+          <ProgressBar index={index} />
           <div className="flex flex-col gap-24">
             <div className="mt-16 flex w-full flex-col items-center gap-8">
               <div className="font-16 font-semibold text-secondary">과연 당신의 선택은?</div>

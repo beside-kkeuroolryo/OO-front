@@ -1,24 +1,41 @@
-import { useMutation, useInfiniteQuery } from '@tanstack/react-query';
+import { useMutation, useInfiniteQuery, useQueryClient } from '@tanstack/react-query';
 import { AxiosError } from 'axios';
 import { CommentType } from '@/types/questions';
 import axiosInstance from '@/api/config/axios';
+import { ResponseStatus } from '@/api/types';
 
-type CommentBody = {
+type PostCommentBody = {
   username?: string;
   password?: string;
   content?: string;
 };
 
+type DeleteCommentBody = {
+  password?: string;
+};
+
+type GetCommentsResponse = {
+  data: {
+    questionId: number;
+    comments: { id: number; username: string; content: string }[];
+    page: { last: boolean; size: number; nextId: number };
+  };
+} & ResponseStatus;
+
+type PostCommentResponse = ResponseStatus;
+
+type DeleteCommentResponse = ResponseStatus;
+
 export const useGetComments = (questionId?: number, enabled?: boolean) => {
   return useInfiniteQuery<{ comments: CommentType[]; isLast: boolean; lastId: number }, AxiosError>(
     ['question', questionId, 'comments'],
     async ({ pageParam }) => {
-      const { data } = await axiosInstance.get(
+      const { data } = await axiosInstance.get<GetCommentsResponse>(
         `/api/golrabas/${questionId}/comments${pageParam ? `?searchAfterId=${pageParam}` : ''}`,
       );
 
-      const { last, size, nextId } = data.data.page;
-      const lastId = size + nextId - 1;
+      const { last, nextId } = data.data.page;
+      const lastId = nextId - 1;
       return { comments: data.data.comments, isLast: last, lastId };
     },
     {
@@ -29,15 +46,35 @@ export const useGetComments = (questionId?: number, enabled?: boolean) => {
 };
 
 export const usePostComment = (questionId?: number) => {
-  return useMutation((body: CommentBody) => {
-    return axiosInstance.post(`/api/golrabas/${questionId}/comments`, body);
-  });
+  const queryClient = useQueryClient();
+  return useMutation(
+    (body: PostCommentBody) => {
+      return axiosInstance.post<PostCommentResponse>(`/api/golrabas/${questionId}/comments`, body);
+    },
+    {
+      onSuccess: () => {
+        return queryClient.invalidateQueries(['question', questionId, 'comments']);
+      },
+    },
+  );
 };
 
 export const useDeleteComment = (questionId?: number, commentId?: number) => {
-  return useMutation((body: { password?: string }) => {
-    return axiosInstance.delete(`/api/golrabas/${questionId}/comments/${commentId}`, {
-      data: body,
-    });
-  });
+  const queryClient = useQueryClient();
+
+  return useMutation(
+    (body: DeleteCommentBody) => {
+      return axiosInstance.delete<DeleteCommentResponse>(
+        `/api/golrabas/${questionId}/comments/${commentId}`,
+        {
+          data: body,
+        },
+      );
+    },
+    {
+      onSuccess: () => {
+        return queryClient.invalidateQueries(['question', questionId, 'comments']);
+      },
+    },
+  );
 };

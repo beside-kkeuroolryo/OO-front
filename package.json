@@ -8,7 +8,8 @@
     "build": "tsc && vite build",
     "lint": "eslint src --ext ts,tsx --report-unused-disable-directives --cache",
     "preview": "vite preview",
-    "lint-staged": "lint-staged"
+    "lint-staged": "lint-staged",
+    "test": "jest"
   },
   "lint-staged": {
     "**/*.{tsx,ts,jsx,js}": [
@@ -26,6 +27,10 @@
     "react-toastify": "^9.1.3"
   },
   "devDependencies": {
+    "@testing-library/jest-dom": "^6.1.2",
+    "@testing-library/react": "^14.0.0",
+    "@testing-library/user-event": "^14.4.3",
+    "@types/jest": "^29.5.4",
     "@types/node": "^20.3.1",
     "@types/react": "^18.0.37",
     "@types/react-copy-to-clipboard": "^5.0.4",
@@ -43,12 +48,16 @@
     "eslint-plugin-react-hooks": "^4.6.0",
     "eslint-plugin-react-refresh": "^0.3.4",
     "husky": "^8.0.3",
+    "jest": "^29.6.4",
+    "jest-environment-jsdom": "^29.6.4",
     "lint-staged": "^13.2.2",
     "postcss": "^8.4.24",
     "prettier": "^2.8.8",
     "prettier-plugin-tailwindcss": "^0.3.0",
     "react-copy-to-clipboard": "^5.1.0",
     "tailwindcss": "^3.3.2",
+    "ts-jest": "^29.1.1",
+    "ts-node": "^10.9.1",
     "typescript": "^5.0.2",
     "vite": "^4.3.9",
     "vite-plugin-svgr": "^3.2.0"
