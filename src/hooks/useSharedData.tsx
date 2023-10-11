@@ -7,7 +7,6 @@ type SharedData = {
   result: string[][];
 };
 
-// TODO: enabled 처리
 export default function useSharedData(shortUrl: string, enabled: boolean) {
   const { data: sharedData } = useGetResult(shortUrl, enabled);
 
