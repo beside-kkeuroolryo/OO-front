@@ -20,8 +20,9 @@ function App() {
           <Route path="friend" element={<Questions />} />
           <Route path="random" element={<Questions />} />
           <Route path="usermade" element={<Questions />} />
-          <Route path="result" element={<Result />} />
         </Route>
+        <Route path="retry" element={<Questions />} />
+        <Route path="result/:shortUrl" element={<Result />} />
       </Routes>
       <ToastContainer
         position="bottom-right"
