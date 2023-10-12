@@ -23,7 +23,7 @@ export default function Result() {
   const isToasted = useRef(false);
 
   const { mutate } = usePostResult();
-  const { sharedIds, sharedResult } = useSharedData(shortUrl || '', !!state?.resultToRender);
+  const { sharedIds, sharedResult } = useSharedData(shortUrl || '', !state?.resultToRender);
 
   const [idsState, resultToPost, resultToRender]: [number[], ResultToPost, ResultToRender] = [
     state?.ids,
