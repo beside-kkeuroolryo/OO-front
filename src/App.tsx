@@ -5,11 +5,13 @@ import Questions from '@/pages/Questions';
 import Result from '@/pages/Result';
 import Request from '@/pages/Request';
 import My from '@/pages/My';
+import SplashScreen from '@/components/common/SplashScreen';
 import 'react-toastify/dist/ReactToastify.css';
 
 function App() {
   return (
-    <div className="mx-auto h-full max-w-mobile">
+    <div className="relative mx-auto h-full max-w-mobile">
+      <SplashScreen />
       <Routes>
         <Route path="/" element={<Home />} />
         <Route path="request" element={<Request />} />
