@@ -20,10 +20,7 @@ const PostCommentModal = forwardRef<HTMLInputElement, PostCommentModalProps>(
 
     return (
       <Modal aria-label="댓글 작성 모달" className="relative" onClose={onClose} {...props}>
-        <form
-          className="font-18 flex flex-col gap-24 bg-white p-24 font-semibold"
-          onSubmit={onPostComment}
-        >
+        <form className="font-18 flex flex-col gap-24 p-24 font-semibold" onSubmit={onPostComment}>
           <div className="flex flex-col gap-8">
             <label htmlFor="nickname_post">닉네임</label>
             <input
