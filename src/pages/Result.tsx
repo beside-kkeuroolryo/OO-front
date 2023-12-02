@@ -76,7 +76,7 @@ export default function Result() {
   };
 
   const handleRetry = () => {
-    navigate(`/retry`, { state: idsState });
+    navigate(`/retry`, { state: ids });
   };
 
   const handleShare = async () => {
