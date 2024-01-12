@@ -39,3 +39,7 @@ export const CATEGORIES: Record<
     img: <Usermade />,
   },
 };
+
+export const DISPLAYED_CATEGORIES = ['ALL', '셀프', '커플', '우정', '랜덤', '같이해요'] as const;
+
+export type DisplayedCategory = (typeof DISPLAYED_CATEGORIES)[number];
