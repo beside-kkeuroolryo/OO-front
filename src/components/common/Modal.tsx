@@ -4,8 +4,8 @@ import { useFocusTrap } from '@/hooks/useFocusTrap';
 import { ReactComponent as Close } from '@/assets/icons/close.svg';
 
 export type ModalProps = {
-  isOpen?: boolean;
-  onClose?: () => void;
+  isOpen: boolean;
+  onClose: () => void;
 } & React.HTMLAttributes<HTMLDialogElement>;
 
 export default function Modal({
