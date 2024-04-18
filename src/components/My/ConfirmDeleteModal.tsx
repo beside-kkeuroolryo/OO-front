@@ -11,7 +11,7 @@ export default function ConfirmDeleteModal({
   ...props
 }: ConfirmDeleteModalProps) {
   return (
-    <Modal className="relative" onClose={onClose} {...props}>
+    <Modal aria-label="저장된 질문 삭제 확인 모달" className="p-40" onClose={onClose} {...props}>
       <form
         className="font-18 flex w-full flex-col gap-36 bg-white font-semibold"
         onSubmit={onDelete}
